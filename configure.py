@@ -28,7 +28,7 @@ import logging
 from twilio.rest import TwilioRestClient
 from twilio.exceptions import TwilioException
 
-from hackpack import local_settings
+from clicktocall import local_settings
 
 
 class Configure(object):

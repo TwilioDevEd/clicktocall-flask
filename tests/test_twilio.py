@@ -1,4 +1,8 @@
 import unittest
+from mock import patch
+
+from twilio.exceptions import TwilioException
+
 from .context import app
 
 
@@ -53,11 +57,43 @@ class TwiMLTest(unittest.TestCase):
         return self.app.post(url, data=params)
 
 
-class ExampleTests(TwiMLTest):
-    def test_sms(self):
-        response = self.sms("Test")
+class ClickToCallTests(TwiMLTest):
+    def test_index(self):
+        response = self.app.get('/')
+        self.assertEquals("200 OK", response.status)
+
+    def test_outbound(self):
+        response = self.call(url='/outbound')
         self.assertTwiML(response)
 
-    def test_voice(self):
-        response = self.call()
-        self.assertTwiML(response)
+    @patch('twilio.rest.resources.Calls')
+    @patch('twilio.rest.resources.Call')
+    def test_call(self, MockCall, MockCalls):
+        mock_call = MockCall.return_value
+        app.client.calls = MockCalls.return_value
+        app.client.calls.create = mock_call
+
+        response = self.app.post('/call',
+                                 data={'phoneNumber': '+15556667777'})
+
+        self.assertEquals("200 OK", response.status)
+
+        c = app.client.calls.create
+        c.assert_called_once_with(from_=app.config['TWILIO_CALLER_ID'],
+                                  to='+15556667777',
+                                  url='http://localhost/outbound')
+
+    @patch('twilio.rest.resources.Calls')
+    def test_call_error_handling(self, MockCalls):
+        def raiseException(*args, **kwargs):
+            raise TwilioException("Test error.")
+        app.client.calls = MockCalls.return_value
+        app.client.calls.create.side_effect = raiseException
+
+        response = self.app.post('/call',
+                                 data={'phoneNumber': '+15556667777'})
+
+        self.assertEquals("200 OK", response.status)
+        self.assertTrue(b"Test error" in response.data, "Could not "
+                        "find error passed through to JSON result: "
+                        "{0}".format(response.data))

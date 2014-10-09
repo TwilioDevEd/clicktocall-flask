@@ -1,123 +1,36 @@
-# Twilio Hackpack for Heroku and Flask
+# Click to Call with Flask 
 
-An easy-to-use repo to kickstart your Twilio app using Flask and deploy onto
-Heroku.  Easy to clone, easy to tweak, easy to deploy.
+An example application implementing Click to Call using Twilio.  For a
+step-by-step tutorial, [visit this link](TODO: link).
 
 [![Build
-Status](https://secure.travis-ci.org/RobSpectre/Twilio-Hackpack-for-Heroku-and-Flask.png)]
-(http://travis-ci.org/RobSpectre/Twilio-Hackpack-for-Heroku-and-Flask)
-[![Coverage Status](https://coveralls.io/repos/RobSpectre/Twilio-Hackpack-for-Heroku-and-Flask/badge.png)]
-(https://coveralls.io/r/RobSpectre/Twilio-Hackpack-for-Heroku-and-Flask)
+Status](https://secure.travis-ci.org/TwilioDevEd/clicktocall-flask.png)]
+(http://travis-ci.org/TwilioDevEd/clicktocall-flask)
+[![Coverage Status](https://coveralls.io/repos/TwilioDevEd/clicktocall-flask/badge.png)]
+(https://coveralls.io/r/TwilioDevEd/clicktocall-flask)
 
 
-Deploy this hackpack to Heroku now!
+Deploy this example app to Heroku now!
 
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/RobSpectre/Twilio-Hackpack-for-Heroku-and-Flask)
-
-
-## Features
-
-Look at all these crazy features!
-
-* [Twilio Client](http://www.twilio.com/api/client) - This hackpack ships 
-  with a base Jinja2 template for Twilio Client already configured and ready to
-  call.  
-* Automagic Configuration - Just run `python configure.py --account_sid ACxxxx --auth_token yyyyy` 
-  and the hackpack configures Twilio and Heroku for you.
-* Production Ready - The [production branch](https://github.com/RobSpectre/Twilio-Hackpack-for-Heroku-and-Flask/tree/production)
-  features a few more settings and dependencies to make the hackpack ready to
-  put into live service.
-* Plug-and-Play - Procfile, requirements.txt and Makefile make installation
-  and usage a breeze.
-* Boilerplate - All the Flask app boilerplate with example Voice and SMS 
-  Request URLs ready for use on Twilio.
-* Testing - Easy base class for unit testing with example tests, tox ready.
-* PEP8 - It's good for you!
-* Python 2 and 3 - It's better for you!
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/TwilioDevEd/clicktocall-flask)
 
 
-## Usage
-
-This hackpack ships with two ready-to-go endpoints for your Twilio Voice and SMS
-apps.  The two routes /voice and /sms contain two examples you can modify
-easily.
-
-To start tweaking your hackpack, just edit `hackpack/app.py`.
-
-For example, here is a quick Twilio Voice app that plays some Ramones.
-
-```python
-@app.route('/voice', methods=['POST'])
-def voice():
-    response = twiml.Response()
-    response.play("http://example.com/music/ramones.mp3")
-    return str(response)
-```
-
-SMS apps are similarly easy.
-
-```python
-@app.route('/sms', methods=['POST'])
-def sms():
-    response = twiml.Response()
-    response.sms("The Ramones are great!")
-    return str(response)
-```
-
-These apps can get interactive pretty quickly.  For example, let's make an SMS
-app that responds with "Best band ever" when you text RAMONES.
-
-```python
-@app.route('/sms', methods=['POST'])
-def sms():
-    response = twiml.Response()
-    body = request.form['Body']
-    if "RAMONES" in body:
-        response.sms("Best band ever.")
-    else:
-        response.sms("Not the best band ever.")
-    return str(response)
-```
-
-You can apply this same concept to
-[Gathering](http://www.twilio.com/docs/api/twiml/gather) user input on Twilio
-Voice.  Here we will Gather the user input with one route and then handle the
-user input with another.
-
-```python
-@app.route('/voice', methods=['POST'])
-def voice():
-    response = twiml.Response()
-    with response.gather(numDigits=1, action="/gather") as gather:
-        gather.say("Press 1 to indicate The Ramones are the best band ever.")
-    return str(response)
-
-@app.route('/gather', methods=['POST'])
-def gather():
-    response = twiml.Response()
-    digits = request.form['Digits']
-    if digits == "1":
-        response.say("You are correct.  The Ramones are the best.")
-    else:
-        response.say("You are wrong.  Never call me again.")
-    return str(response)
-```
 
 ## Installation
 
-Step-by-step on how to deploy, configure and develop on this hackpack.
+Step-by-step on how to deploy, configure and develop on this example app.
 
 ### Fastest Deploy
 
-Use Heroku to deploy this hackpack immediately:
+Use Heroku to deploy this app immediately:
 
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/RobSpectre/Twilio-Hackpack-for-Heroku-and-Flask)
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/TwilioDevEd/clicktocall-flask)
 
 ### Getting Started 
 
 1) Grab latest source
 <pre>
-git clone git://github.com/RobSpectre/Twilio-Hackpack-for-Heroku-and-Flask.git 
+git clone git://github.com/TwilioDevEd/clicktocall-flask.git 
 </pre>
 
 2) Navigate to folder and create new Heroku Cedar app
@@ -143,12 +56,12 @@ heroku open
 
 ### Configuration
 
-Want to use the built-in Twilio Client template?  Configure your hackpack with
+Want to use the built-in Twilio Client template?  Configure your app with
 three easy options.
 
 #### Automagic Configuration
 
-This hackpack ships with an auto-configure script that will create a new TwiML
+This app ships with an auto-configure script that will create a new TwiML
 app, purchase a new phone number, and set your Heroku app's environment
 variables to use your new settings.  Here's a quick step-by-step:
 
@@ -177,7 +90,7 @@ Automagic configuration comes with a number of features.
 
 #### local_settings.py
 
-local_settings.py is a file available in the hackpack route for you to configure
+local_settings.py is a file available in the app route for you to configure
 your twilio account credentials manually.  Be sure not to expose your Twilio
 account to a public repo though.
 
@@ -193,7 +106,7 @@ TWILIO_CALLER_ID = "+17778889999"
 The configurator will automatically use your environment variables if you
 already have a TwiML app and phone number you would prefer to use.  When these
 environment variables are present, it will configure the Twilio and Heroku apps
-all to use the hackpack.
+all to use the app.
 
 1) Set environment variables locally.
 <pre>
@@ -211,8 +124,8 @@ python configure.py
 
 ### Development
 
-Getting your local environment setup to work with this hackpack is similarly
-easy.  After you configure your hackpack with the steps above, use this guide to
+Getting your local environment setup to work with this app is similarly
+easy.  After you configure your app with the steps above, use this guide to
 get going locally:
 
 1) Install the dependencies.
@@ -227,12 +140,12 @@ foreman start
 
 3) Open browser to [http://localhost:5000](http://localhost:5000).
 
-4) Tweak away on `hackpack/app.py`.
+4) Tweak away on `clicktocall/app.py`.
 
 
 ## Testing
 
-This hackpack comes with a full testing suite ready for nose.
+This app comes with a full testing suite ready for nose.
 
 <pre>
 make test
@@ -262,44 +175,13 @@ class ExampleTest(test_twilio.TwiMLTest):
 ```
 
 
-## Branches
-
-Two configurations are available in different branches:
-
-* master - Default dev mode with minimum possible code to get going.
-* production - Intended for live use with more code and dependencies appropriate
-  to a production environment. To deploy this branch instead, adjust your
-  procedure for the production branch:
-
-<pre>
-git checkout production
-git push heroku production:master
-</pre>
-
-
 ## Meta 
 
 * No warranty expressed or implied.  Software is as is. Diggity.
 * [MIT License](http://www.opensource.org/licenses/mit-license.html)
-* Lovingly crafted by [Twilio New
- York](http://www.meetup.com/Twilio/New-York-NY/) 
-
-
-## Community Contributors
-
-Here we recognize crack members of the Twilio community who worked on this
-hackpack.
-
-* [Timothée Boucher](http://www.timotheeboucher.com/) - idea for production
-  branch
-* [Oscar](http://labcoder.com/) - Bug fix for user input
-* [Zachary
-  Woase](http://zacharyvoase.com/) - [Twilio signature
-  validation](https://github.com/RobSpectre/Twilio-Hackpack-for-Heroku-and-Flask/pull/7) for production branch.
-* [Kevin Burke](http://www.twentymilliseconds.com/) - Better FTU for Twilio
-  Client.
+* Lovingly crafted by Twilio Developer Education.
 
 
 [![githalytics.com
 alpha](https://cruel-carlota.pagodabox.com/33a5ddd61dd29dd933422bca2b3dfa0e
-"githalytics.com")](http://githalytics.com/RobSpectre/Twilio-Hackpack-for-Heroku-and-Flask)
+"githalytics.com")](http://githalytics.com/TwilioDevEd/clicktocall-flask)

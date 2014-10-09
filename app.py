@@ -1,6 +1,6 @@
 import os
 
-from hackpack.app import app
+from clicktocall.app import app
 
 
 if __name__ == '__main__':
