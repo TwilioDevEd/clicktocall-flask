@@ -13,4 +13,4 @@ venv
 *.pyo
 *.swp
 *.coverage
-hackpack.egg-info
+flask_clicktocall.egg-info
