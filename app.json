@@ -1,6 +1,6 @@
 {
-    "name": "Twilio Hackpack for Python",
-    "description": "The fastest way to start using Twilio with Python.  Based on Flask microwebframework.",
+    "name": "Twilio Click To Call: Flask",
+    "description": "An example of implementing click to call functionality in a Python Flask application",
     "keywords": [
         "twilio",
         "flask",
@@ -10,8 +10,9 @@
         "voice"
     ],
     "website": "http://www.twilio.com",
-    "repository": "https://github.com/RobSpectre/Twilio-Hackpack-for-Heroku-and-Flask",
-    "logo": "https://www.twilio.com/packages/company/img/logos_downloadable_round.png",
+    "repository": "https://github.com/TwilioDevEd/clicktocall-flask",
+    "logo": "https://s3-us-west-2.amazonaws.com/deved/twilio-logo.png",
+    "success_url": "/landing.html",
     "env": {
         "TWILIO_ACCOUNT_SID": {
             "description": "Your Twilio account's unique identifier, found here: https://www.twilio.com/user/account",
@@ -26,5 +27,5 @@
             "value": "+15556667777"
         }
     },
-    "success_url": "/"
+    "success_url": "/landing.html"
 }
