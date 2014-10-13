@@ -53,8 +53,8 @@ def outbound():
                  "dial out to your sales team with the Dial verb.",
                  voice='alice')
     '''
-    # Uncomment this code and replace the number with the number you want your
-    # customers to call.
+    # Uncomment this code and replace the number with the number you want 
+    # your customers to call.
     with response.dial() as dial:
         dial.number("+16518675309")
     '''
