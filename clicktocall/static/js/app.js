@@ -13,7 +13,8 @@ $(function() {
         // submitting the form
         e.preventDefault();
 
-        // Call our ajax endpoint on the server to initialize the phone call
+        // Call our ajax endpoint on the server to initialize the 
+        // phone call
         $.ajax({
             url: '/call',
             method: 'POST',
