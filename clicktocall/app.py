@@ -59,3 +59,10 @@ def outbound():
         dial.number("+16518675309")
     '''
     return str(response)
+
+
+# Route for Landing Page after Heroku deploy.
+@app.route('/landing.html')
+def landing():
+    return render_template('landing.html',
+                           configuration_error=None)
