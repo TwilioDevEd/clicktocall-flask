@@ -1,0 +1,68 @@
+.step(data-title='How it Works')
+  :markdown
+    ## How It Works
+
+    Let's go over the steps necessary to implement click-to-call in our application:
+
+    ![Click-to-call Diagram](//s3-us-west-2.amazonaws.com/deved/clicktocall.png)
+
+    1. A website visitor wants to connect to your organization.  She submits a web form with her phone number to receive a call connecting her to your sales or support team. 
+
+    1. Your web application receives the form submission.  An HTTP request is initiated from your application to Twilio to initiate an outbound call. 
+
+    1. Twilio receives the request and initiates a call to the user's phone number.
+
+    1. User receives the call.
+
+    1. After the call connects, Twilio asks our application for [TwiML instructions](/docs/api/twiml). Our TwiML instructs Twilio to connect the user to our sales or support teams.
+
+    ## What We Will Learn
+
+    This How-To demonstrates initializing a call using the [Twilio REST API][rest] and creating TwiML call logic using the [Say][say] and [Dial][dial] verbs.
+
+    Sound like a plan? Let's get started!
+
+    [rest]: /docs/api/rest/
+    [dial]: /docs/api/twiml/dial
+    [say]: /docs/api/twiml/say
+.step(data-title="Application Overview", data-file='clicktocall/app.py')
+  :markdown
+    ## Our Flask Application
+
+    In this example, we're using the [Flask framework](http://flask.pocoo.org) for Python. Flask is a popular, lightweight web framework that provides HTTP request routing, server-side HTML rendering, and an extensible stack to process incoming requests.
+
+    To run this application locally, you can download it from the links above.  After extracting the app to a local directory, make sure to run `pip install -r requirements.txt` in that directory to install all of the application's dependencies from [the Cheese Shop](https://pypi.python.org/pypi).
+
+    This file, `app.py`, creates our Flask application and starts an HTTP server.  Most of the server-side code for this example is located here. The HTML template containing the interface our users will use for click-to-call is in the `clicktocall/templates` directory.  Static assets such as images, stylesheets and JavaScript are located in `clicktocall/static`.
+
+    We'll check that out in a moment, but first we need to configure our application with our Twilio account information.
+
+
+.step(data-title='Application Config', data-file='clicktocall/local_settings.py', data-highlight='13-17')
+  :markdown
+    ## Application Configuration
+
+    In this file, we pull in all the account configuration we need to run the application. Rather than storing these configuration values in a source file, you may want to store them as system environment variables. In this Python code, we're reading in values from these variables. On systems such as OSX or Linux, you can quickly create new environment variables with `export YOUR_VARIABLE=somevalue`.
+
+    Our app will need your Twilio account credentials and a phone number to use for outbound calls. Your account credentials can be [found on your dashboard](/user/account) - let's briefly explain what these variables are:
+
+    * `TWILIO_ACCOUNT_SID` : Your account SID - this is like your username for the Twilio API
+    * `TWILIO_AUTH_TOKEN` : Your auth token - this is like your password for the Twilio API
+    * `TWILIO_NUMBER` : a Twilio number [from your account](/user/account/phone-numbers/incoming)
+
+    Okay, now that our app is configured, let's move on to the code. We'll begin by showing how we render the home page for this application.
+
+.step(data-title='Import Dependencies', data-file='clicktocall/app.py', data-highlight='1-8')
+  :markdown
+    ## Import Dependencies
+
+    We'll kick off our project by importing some of our dependencies.  First, we'll
+    get a number features from the Flask framework that we are going to use: the
+    `Flask` class to create our application, `render_template` to deliver our HTML
+    to the user, `request` to process the information in POSTs we receive from our
+    users interacting with our form and Twilio, and `url_for` to construct the URI
+    we need to share with Twilio for our TwiML.
+
+    Next, we'll import a couple helpful bits from the Twilio python module: `twiml`
+    to help generate the instructions we give to Twilio for our calls and
+    `TwilioRestClient` to initiate those calls with Twilio.
