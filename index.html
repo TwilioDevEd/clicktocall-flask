@@ -1,0 +1,160 @@
+
+<div id="viewsaurus" data-title="Click-to-Call">
+  <div class="saurus-panes">
+    <div class="saurus-prose">
+      <div class="saurus-prose-header">
+        <div class="title-outer"><span class="step-title">Click-to-Call</span></div>
+      </div>
+      <div class="saurus-nav-buttons">
+        <div class="saurus-nav-button nav-overview">
+          <div class="saurus-nav-button-inner"><i class="fa fa-fw fa-list"></i></div>
+          <div class="nav-divider"></div>
+        </div>
+        <div class="saurus-nav-button nav-previous">
+          <div class="saurus-nav-button-inner"><a href=""> <i class="fa fa-fw fa-play fa-rotate-180"></i></a></div>
+          <div class="nav-divider"></div>
+        </div>
+        <div class="saurus-nav-button nav-next clickable">
+          <div class="saurus-nav-button-inner"><a href="#1"> <i class="fa fa-fw fa-play"></i></a></div>
+        </div>
+        <div class="saurus-next-title"><span class="next-title-inner"></span></div>
+      </div>
+      <div class="saurus-progress-bar"></div>
+      <div class="saurus-start">
+        <p></p><a href="#0">Start Tutorial</a>
+      </div>
+      <div class="saurus-content">
+<div data-title="Setup Application" class="chapter">
+  <div data-title="How it Works" class="step"><h2 id="how-it-works">How It Works</h2>
+<p>Let&#39;s go over the steps necessary to implement click-to-call in our application:</p>
+<p><img src="//s3-us-west-2.amazonaws.com/deved/clicktocall.png" alt="Click-to-call Diagram"></p>
+<ol>
+<li><p>A website visitor wants to connect to your organization.  She submits a web form with her phone number to receive a call connecting her to your sales or support team. </p>
+</li>
+<li><p>Your web application receives the form submission.  An HTTP request is initiated from your application to Twilio to initiate an outbound call. </p>
+</li>
+<li><p>Twilio receives the request and initiates a call to the user&#39;s phone number.</p>
+</li>
+<li><p>User receives the call.</p>
+</li>
+<li><p>After the call connects, Twilio asks our application for <a href="/docs/api/twiml">TwiML instructions</a>. Our TwiML instructs Twilio to connect the user to our sales or support teams.</p>
+</li>
+</ol>
+<h2 id="what-we-will-learn">What We Will Learn</h2>
+<p>This How-To demonstrates initializing a call using the <a href="/docs/api/rest/">Twilio REST API</a> and creating TwiML call logic using the <a href="/docs/api/twiml/say">Say</a> and <a href="/docs/api/twiml/dial">Dial</a> verbs.</p>
+<p>Sound like a plan? Let&#39;s get started!</p>
+
+  </div>
+  <div data-title="Application Overview" data-file="clicktocall/app.py" class="step"><h2 id="our-flask-application">Our Flask Application</h2>
+<p>In this example, we&#39;re using the <a href="http://flask.pocoo.org">Flask framework</a> for Python. Flask is a popular, lightweight web framework that provides HTTP request routing, server-side HTML rendering, and an extensible stack to process incoming requests.</p>
+<p>To run this application locally, you can download it from the links above.  After extracting the app to a local directory, make sure to run <code>pip install -r requirements.txt</code> in that directory to install all of the application&#39;s dependencies from <a href="https://pypi.python.org/pypi">the Cheese Shop</a>.</p>
+<p>This file, <code>app.py</code>, creates our Flask application and starts an HTTP server.  Most of the server-side code for this example is located here. The HTML template containing the interface our users will use for click-to-call is in the <code>clicktocall/templates</code> directory.  Static assets such as images, stylesheets and JavaScript are located in <code>clicktocall/static</code>.</p>
+<p>We&#39;ll check that out in a moment, but first we need to configure our application with our Twilio account information.</p>
+
+  </div>
+  <div data-title="Application Config" data-file="clicktocall/local_settings.py" data-highlight="13-17" class="step"><h2 id="application-configuration">Application Configuration</h2>
+<p>In this file, we pull in all the account configuration we need to run the application. Rather than storing these configuration values in a source file, you may want to store them as system environment variables. In this Python code, we&#39;re reading in values from these variables. On systems such as OSX or Linux, you can quickly create new environment variables with <code>export YOUR_VARIABLE=somevalue</code>.</p>
+<p>Our app will need your Twilio account credentials and a phone number to use for outbound calls. Your account credentials can be <a href="/user/account">found on your dashboard</a> - let&#39;s briefly explain what these variables are:</p>
+<ul>
+<li><code>TWILIO_ACCOUNT_SID</code> : Your account SID - this is like your username for the Twilio API</li>
+<li><code>TWILIO_AUTH_TOKEN</code> : Your auth token - this is like your password for the Twilio API</li>
+<li><code>TWILIO_NUMBER</code> : a Twilio number <a href="/user/account/phone-numbers/incoming">from your account</a></li>
+</ul>
+<p>Okay, now that our app is configured, let&#39;s move on to the code. We&#39;ll begin by showing how we render the home page for this application.</p>
+
+  </div>
+  <div data-title="Import Dependencies" data-file="clicktocall/app.py" data-highlight="1-8" class="step"><h2 id="import-dependencies">Import Dependencies</h2>
+<p>We&#39;ll kick off our project by importing some of our dependencies.  First, we&#39;ll
+get a number features from the Flask framework that we are going to use: the
+<code>Flask</code> class to create our application, <code>render_template</code> to deliver our HTML
+to the user, <code>request</code> to process the information in POSTs we receive from our
+users interacting with our form and Twilio, and <code>url_for</code> to construct the URI
+we need to share with Twilio for our TwiML.</p>
+<p>Next, we&#39;ll import a couple helpful bits from the Twilio python module: <code>twiml</code>
+to help generate the instructions we give to Twilio for our calls and
+<code>TwilioRestClient</code> to initiate those calls with Twilio.</p>
+
+  </div>
+</div>
+<div data-title="Flask Server" class="chapter">
+  <div data-title="How it Works" data-file="app.py" class="step"><h2 id="flask-boilerplate">Flask Boilerplate</h2>
+<p>First, we&#39;ll create a file in our project root called <code>app.py</code> to seperate the
+boilerplate to run our Flask app from the logic of our Click to Call
+implementation.  This includes importing the <code>app</code> object we create in
+<code>clicktocall/app.py</code> and then running it if the script is executed.</p>
+<p>For convenience sake for Heroku users, if the <code>PORT</code> environment variable
+exists, we&#39;ll run the app on the PORT the environment specified.  If not, we&#39;ll
+run on port 5000 and turn on debug mode for as we work on our project.</p>
+
+  </div>
+  <div data-title="Route: Home Page" data-file="clicktocall/app.py" data-highlight="15-19" class="step"><h2 id="rendering-the-home-page">Rendering the Home Page</h2>
+<p>This route is pretty simple - for requests to the root URL of our web app, we will render a <a href="http://jinja.pocoo.org/docs/dev/">Jinja2</a> template with the HTML, CSS, and JavaScript to drive our click-to-call page.</p>
+
+  </div>
+  <div data-title="Form Post URL" data-file="clicktocall/app.py" data-highlight="22-44" class="step"><h2 id="form-post-url">Form POST Url</h2>
+<p>This route will respond to an AJAX request from the UI for our click-to-call web page, which we&#39;ll examine in a moment. Here, we use an authenticated Twilio REST API client to make an outbound phone call to the phone number that was submitted by the user. </p>
+<p>For an outbound phone call, we need to specify a public URL for Twilio to request once the call has connected, so it knows what to do next. In a click to call application, these instructions could be as simple as &quot;dial our sales number&quot;, or it could put a user into a full blown IVR system you&#39;ve built.</p>
+<p>In this request, we assume that the domain that your app is running on is stored in the &quot;host&quot; header (probable in production), but you could change this to be anything. When Twilio dials out to the user, it will use the TwiML generated by the <code>/outbound</code> route, which we&#39;ll examine next.</p>
+
+  </div>
+  <div data-title="TwiML Response" data-file="clicktocall/app.py" data-highlight="47-61" class="step"><h2 id="controller-twiml-instructions">Controller - TwiML Instructions</h2>
+<p>Before Twilio will connect a call, it needs to know what to do once the call is made. Twilio will request these instructions from your web app as an XML document, using tags that we call <a href="/docs/api/twiml">TwiML</a> to tell it what to do. </p>
+<p>In this route, we are going to use the Twilio Python module to generate an XML document that looks like this, using the Twiml <code>Say</code> and <code>Dial</code> tags:</p>
+<pre><code>&lt;Response&gt;
+  &lt;Say voice=&quot;alice&quot;&gt;
+    Thanks for calling [...]
+  &lt;/Say&gt;
+  &lt;!-- in a real app, you would dial your sales team or whomever --&gt;
+  &lt;!--
+  &lt;Dial&gt;+16515551111&lt;/Dial&gt;
+  --&gt;
+&lt;/Response&gt;
+</code></pre><p>That&#39;s most of the interesting bits on the back end - let&#39;s move to the front end code to see how we&#39;re collecting the phone number from the user.</p>
+
+  </div>
+</div>
+<div data-title="Web Form" class="chapter">
+  <div data-title="UI: Page Structure" data-file="clicktocall/templates/index.html" data-highlight="2-12" class="step"><h2 id="ui-styles">UI: Styles</h2>
+<p>Here on our home page, we generate an HTML page that we present to a user so they can click a button to get connected with us. To make the page a little more friendly, we include styles from <a href="http://getbootstrap.com/">Twitter Bootstrap</a>. We also include styles for a third-party jQuery plugin that make it easier to collect and validate international phone numbers.</p>
+
+  </div>
+  <div data-title="UI: Form" data-file="clicktocall/templates/index.html" data-highlight="27-43" class="step"><h2 id="ui-form-structure">UI: Form Structure</h2>
+<p>In the body of our HTML template, we generate a form with a single text field for the user to enter their phone number. We assign unique IDs to both the form and the phone number text field, as we will need both in the JavaScript we write to submit this form. Let&#39;s take a look at that code next.</p>
+
+  </div>
+  <div data-title="UI: Phone Input" data-file="clicktocall/static/js/app.js" data-highlight="4-8" class="step"><h2 id="ui-smart-phone-number-field">UI: Smart Phone Number Field</h2>
+<p>Our click to call page makes use of a <a href="https://github.com/Bluefieldscom/intl-tel-input">jQuery plugin</a> to present a nice looking, auto-validating phone number input.  Here, we tell the plugin to decorate a text field with a given ID and tell it to validate numbers as the user types.</p>
+
+  </div>
+  <div data-title="UI: Submitting Form" data-file="clicktocall/static/js/app.js" data-highlight="10-32" class="step"><h2 id="ui-submitting-the-form">UI: Submitting the Form</h2>
+<p>This chunk of code overrides the default form submission behavior of the HTML page to asynchronously submit the form via Ajax.</p>
+<p>When the form is submitted, we listen for that event in JavaScript, and cancel the default behavior in the DOM (which is to submit the form and initiate a page turn).  Next, we create an Ajax request to our back end, passing along the phone number which was entered by the user.</p>
+<p>When the Ajax request completes, the server sends a brief JSON response with either a success message or an error.  In the success case, we display an alert indicating the call was connected successfully.</p>
+
+  </div>
+  <div data-title="Finish" class="step"><h2 id="all-done">All Done</h2>
+<p>Congrats! You just learned how to build a working Click-to-Call solution. To improve upon this you could add two-factor authentication to your app, or create an interactive survey to follow-up with your customer.</p>
+<p>Thanks for checking out this tutorial! If you have any feedback to share with us, we&#39;d love to hear it. Tweet <a href="http://twitter.com/twilio">@twilio</a> to let us know what you think.</p>
+
+  </div>
+</div>
+<div class="saurus-files" style="display:none;"><textarea class="saurus-file" data-file="clicktocall/app.py" data-mode="python">ZnJvbSBmbGFzayBpbXBvcnQgRmxhc2sKZnJvbSBmbGFzayBpbXBvcnQganNvbmlmeQpmcm9tIGZsYXNrIGltcG9ydCByZW5kZXJfdGVtcGxhdGUKZnJvbSBmbGFzayBpbXBvcnQgcmVxdWVzdApmcm9tIGZsYXNrIGltcG9ydCB1cmxfZm9yCgpmcm9tIHR3aWxpbyBpbXBvcnQgdHdpbWwKZnJvbSB0d2lsaW8ucmVzdCBpbXBvcnQgVHdpbGlvUmVzdENsaWVudAoKIyBEZWNsYXJlIGFuZCBjb25maWd1cmUgYXBwbGljYXRpb24KYXBwID0gRmxhc2soX19uYW1lX18sIHN0YXRpY191cmxfcGF0aD0nL3N0YXRpYycpCmFwcC5jb25maWcuZnJvbV9weWZpbGUoJ2xvY2FsX3NldHRpbmdzLnB5JykKCgojIFJvdXRlIGZvciBDbGljayB0byBDYWxsIGRlbW8gcGFnZS4KQGFwcC5yb3V0ZSgnLycpCmRlZiBpbmRleCgpOgogICAgcmV0dXJuIHJlbmRlcl90ZW1wbGF0ZSgnaW5kZXguaHRtbCcsCiAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbmZpZ3VyYXRpb25fZXJyb3I9Tm9uZSkKCgojIFZvaWNlIFJlcXVlc3QgVVJMCkBhcHAucm91dGUoJy9jYWxsJywgbWV0aG9kcz1bJ1BPU1QnXSkKZGVmIGNhbGwoKToKICAgICMgR2V0IHBob25lIG51bWJlciB3ZSBuZWVkIHRvIGNhbGwKICAgIHBob25lX251bWJlciA9IHJlcXVlc3QuZm9ybS5nZXQoJ3Bob25lTnVtYmVyJywgTm9uZSkKCiAgICB0cnk6CiAgICAgICAgdHdpbGlvX2NsaWVudCA9IFR3aWxpb1Jlc3RDbGllbnQoYXBwLmNvbmZpZ1snVFdJTElPX0FDQ09VTlRfU0lEJ10sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYXBwLmNvbmZpZ1snVFdJTElPX0FVVEhfVE9LRU4nXSkKICAgIGV4Y2VwdCBFeGNlcHRpb24gYXMgZToKICAgICAgICBtc2cgPSAnTWlzc2luZyBjb25maWd1cmF0aW9uIHZhcmlhYmxlOiB7MH0nLmZvcm1hdChlKQogICAgICAgIHJldHVybiBqc29uaWZ5KHsnZXJyb3InOiBtc2d9KQoKICAgIHRyeToKICAgICAgICB0d2lsaW9fY2xpZW50LmNhbGxzLmNyZWF0ZShmcm9tXz1hcHAuY29uZmlnWydUV0lMSU9fQ0FMTEVSX0lEJ10sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdG89cGhvbmVfbnVtYmVyLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHVybD11cmxfZm9yKCcub3V0Ym91bmQnLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF9leHRlcm5hbD1UcnVlKSkKICAgIGV4Y2VwdCBFeGNlcHRpb24gYXMgZToKICAgICAgICBhcHAubG9nZ2VyLmVycm9yKGUpCiAgICAgICAgcmV0dXJuIGpzb25pZnkoeydlcnJvcic6IHN0cihlKX0pCgogICAgcmV0dXJuIGpzb25pZnkoeydtZXNzYWdlJzogJ0NhbGwgaW5jb21pbmchJ30pCgoKQGFwcC5yb3V0ZSgnL291dGJvdW5kJywgbWV0aG9kcz1bJ1BPU1QnXSkKZGVmIG91dGJvdW5kKCk6CiAgICByZXNwb25zZSA9IHR3aW1sLlJlc3BvbnNlKCkKCiAgICByZXNwb25zZS5zYXkoIlRoYW5rIHlvdSBmb3IgY29udGFjdGluZyBvdXIgc2FsZXMgZGVwYXJ0bWVudC4gSWYgdGhpcyAiCiAgICAgICAgICAgICAgICAgImNsaWNrIHRvIGNhbGwgYXBwbGljYXRpb24gd2FzIGluIHByb2R1Y3Rpb24sIHdlIHdvdWxkICIKICAgICAgICAgICAgICAgICAiZGlhbCBvdXQgdG8geW91ciBzYWxlcyB0ZWFtIHdpdGggdGhlIERpYWwgdmVyYi4iLAogICAgICAgICAgICAgICAgIHZvaWNlPSdhbGljZScpCiAgICAnJycKICAgICMgVW5jb21tZW50IHRoaXMgY29kZSBhbmQgcmVwbGFjZSB0aGUgbnVtYmVyIHdpdGggdGhlIG51bWJlciB5b3Ugd2FudCAKICAgICMgeW91ciBjdXN0b21lcnMgdG8gY2FsbC4KICAgIHdpdGggcmVzcG9uc2UuZGlhbCgpIGFzIGRpYWw6CiAgICAgICAgZGlhbC5udW1iZXIoIisxNjUxODY3NTMwOSIpCiAgICAnJycKICAgIHJldHVybiBzdHIocmVzcG9uc2UpCgoKIyBSb3V0ZSBmb3IgTGFuZGluZyBQYWdlIGFmdGVyIEhlcm9rdSBkZXBsb3kuCkBhcHAucm91dGUoJy9sYW5kaW5nLmh0bWwnKQpkZWYgbGFuZGluZygpOgogICAgcmV0dXJuIHJlbmRlcl90ZW1wbGF0ZSgnbGFuZGluZy5odG1sJywKICAgICAgICAgICAgICAgICAgICAgICAgICAgY29uZmlndXJhdGlvbl9lcnJvcj1Ob25lKQo=</textarea>
+<textarea class="saurus-file" data-file="clicktocall/local_settings.py" data-mode="python">JycnCkNvbmZpZ3VyYXRpb24gU2V0dGluZ3MKJycnCgonJycgVW5jb21tZW50IHRvIGNvbmZpZ3VyZSB1c2luZyB0aGUgZmlsZS4gIApXQVJOSU5HOiBCZSBjYXJlZnVsIG5vdCB0byBwb3N0IHlvdXIgYWNjb3VudCBjcmVkZW50aWFscyBvbiBHaXRIdWIuCgpUV0lMSU9fQUNDT1VOVF9TSUQgPSAiQUN4eHh4eHh4eHh4eHh4IiAKVFdJTElPX0FVVEhfVE9LRU4gPSAieXl5eXl5eXl5eXl5eXl5eSIKVFdJTElPX0NBTExFUl9JRCA9ICIrMTc3Nzg4ODk5OTkiCicnJwoKaW1wb3J0IG9zClRXSUxJT19BQ0NPVU5UX1NJRCA9IG9zLmVudmlyb24uZ2V0KCdUV0lMSU9fQUNDT1VOVF9TSUQnLCBOb25lKQpUV0lMSU9fQVVUSF9UT0tFTiA9IG9zLmVudmlyb24uZ2V0KCdUV0lMSU9fQVVUSF9UT0tFTicsIE5vbmUpClRXSUxJT19DQUxMRVJfSUQgPSBvcy5lbnZpcm9uLmdldCgnVFdJTElPX0NBTExFUl9JRCcsIE5vbmUpClRXSUxJT19BUFBfU0lEID0gb3MuZW52aXJvbi5nZXQoJ1RXSUxJT19BUFBfU0lEJywgTm9uZSkK</textarea>
+<textarea class="saurus-file" data-file="app.py" data-mode="python">aW1wb3J0IG9zCgpmcm9tIGNsaWNrdG9jYWxsLmFwcCBpbXBvcnQgYXBwCgoKaWYgX19uYW1lX18gPT0gJ19fbWFpbl9fJzoKICAgIHBvcnQgPSBpbnQob3MuZW52aXJvbi5nZXQoIlBPUlQiLCA1MDAwKSkKICAgIGlmIHBvcnQgPT0gNTAwMDoKICAgICAgICBhcHAuZGVidWcgPSBUcnVlCiAgICBhcHAucnVuKGhvc3Q9JzAuMC4wLjAnLCBwb3J0PXBvcnQpCg==</textarea>
+<textarea class="saurus-file" data-file="clicktocall/templates/index.html" data-mode="htmlmixed">PCFET0NUWVBFIGh0bWw+CjxodG1sPgogIDxoZWFkPgogICAgICA8dGl0bGU+VHdpbGlvIENsaWNrIHRvIENhbGwgZm9yIEhlcm9rdSBhbmQgRmxhc2s8L3RpdGxlPgogICAgICA8IS0tIFdlIHVzZSBUd2l0dGVyIEJvb3RzdHJhcCBhcyB0aGUgZGVmYXVsdCBzdHlsaW5nIGZvciBvdXIgcGFnZS0tPgogICAgICA8bGluayByZWw9InN0eWxlc2hlZXQiIAogICAgICAgICAgaHJlZj0iLy9tYXhjZG4uYm9vdHN0cmFwY2RuLmNvbS9ib290c3RyYXAvMy4yLjAvY3NzL2Jvb3RzdHJhcC5taW4uY3NzIj4KICAgICAgPGxpbmsgcmVsPSJzdHlsZXNoZWV0IiAKICAgICAgICAgIGhyZWY9Ii8vbWF4Y2RuLmJvb3RzdHJhcGNkbi5jb20vYm9vdHN0cmFwLzMuMi4wL2Nzcy9ib290c3RyYXAtdGhlbWUubWluLmNzcyI+IAogICAgICAgIDwhLS0gSW5jbHVkZSBDU1MgZm9yIG91ciB0aGlyZC1wYXJ0eSB0ZWxlcGhvbmUgaW5wdXQgalF1ZXJ5IHBsdWdpbi0tPgogICAgICA8bGluayByZWw9InN0eWxlc2hlZXQiIGhyZWY9Ii9zdGF0aWMvc3R5bGVzL2ludGxUZWxJbnB1dC5jc3MiPgogIDwvaGVhZD4KICA8Ym9keT4KICAgIDxkaXYgY2xhc3M9ImNvbnRhaW5lciI+CiAgICAgICAgPGgxPkNsaWNrIFRvIENhbGw8L2gxPgogICAgICAgIDxwPgogICAgICAgICAgICBDbGljayBUbyBDYWxsIGNvbnZlcnRzIHlvdXIgd2Vic2l0ZSdzIHVzZXJzIGludG8gZW5nYWdlZCBjdXN0b21lcnMgYnkgCiAgICAgICAgICAgIGNyZWF0aW5nIGFuIGVhc3kgd2F5IGZvciB5b3VyIGN1c3RvbWVycyB0byBjb250YWN0IHlvdXIgc2FsZXMgYW5kIAogICAgICAgICAgICBzdXBwb3J0IHRlYW1zIHJpZ2h0IG9uIHlvdXIgd2Vic2l0ZS4KICAgICAgICA8L3A+CiAgICAgICAgPHA+SGVyZSdzIGFuIGV4YW1wbGUgb2YgaG93IGl0J3MgZG9uZSE8L3A+CiAgICAgICAgPGhyPgoKICAgICAgICA8IS0tIEMyQyBjb250YWN0IGZvcm0tLT4KICAgICAgICA8ZGl2IGNsYXNzPSJyb3ciPgogICAgICAgICAgICA8ZGl2IGNsYXNzPSJjb2wtbWQtMTIiPgogICAgICAgICAgICAgICAgPGZvcm0gaWQ9ImNvbnRhY3RGb3JtIiByb2xlPSJmb3JtIj4KICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJmb3JtLWdyb3VwIj4KICAgICAgICAgICAgICAgICAgICAgICAgPGgzPkNhbGwgU2FsZXM8L2gzPgogICAgICAgICAgICAgICAgICAgICAgICA8cCBjbGFzcz0iaGVscC1ibG9jayI+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICBBcmUgeW91IGludGVyZXN0ZWQgaW4gaW1wcmVzc2luZyB5b3VyIGZyaWVuZHMgYW5kIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgY29uZm91bmRpbmcgeW91ciBlbmVtaWVzPyBFbnRlciB5b3VyIHBob25lIG51bWJlciAKICAgICAgICAgICAgICAgICAgICAgICAgICAgIGJlbG93LCBhbmQgb3VyIHRlYW0gd2lsbCBjb250YWN0IHlvdSByaWdodCBhd2F5LgogICAgICAgICAgICAgICAgICAgICAgICA8L3A+CiAgICAgICAgICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzcz0iZm9ybS1ncm91cCI+CiAgICAgICAgICAgICAgICAgICAgICAgIDxpbnB1dCB0eXBlPSJ0ZXh0IiBpZD0icGhvbmVOdW1iZXIiIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgcGxhY2Vob2xkZXI9Iig2NTEpIDU1NS03ODg5IiBjbGFzcz0iZm9ybS1jb250cm9sIj4KICAgICAgICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgICAgICAgICA8YnV0dG9uIHR5cGU9InN1Ym1pdCIgY2xhc3M9ImJ0biBidG4tZGVmYXVsdCI+CiAgICAgICAgICAgICAgICAgICAgICAgIENvbnRhY3QgU2FsZXMKICAgICAgICAgICAgICAgICAgICA8L2J1dHRvbj4KICAgICAgICAgICAgICAgIDwvZm9ybT4KICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgPC9kaXY+CiAgICA8L2Rpdj4KICAgIDwhLS0gSW5jbHVkZSBwYWdlIGRlcGVuZGVuY2llcyAtLT4KICAgIDxzY3JpcHQgc3JjPSIvL2FqYXguZ29vZ2xlYXBpcy5jb20vYWpheC9saWJzL2pxdWVyeS8xLjExLjEvanF1ZXJ5Lm1pbi5qcyI+PC9zY3JpcHQ+CiAgICA8c2NyaXB0IHNyYz0iL3N0YXRpYy9qcy9pbnRsVGVsSW5wdXQubWluLmpzIj48L3NjcmlwdD4KICAgIDxzY3JpcHQgc3JjPSIvc3RhdGljL2pzL2FwcC5qcyI+PC9zY3JpcHQ+CiAgPC9ib2R5Pgo8L2h0bWw+Cg==</textarea>
+<textarea class="saurus-file" data-file="clicktocall/static/js/app.js" data-mode="javascript">Ly8gRXhlY3V0ZSBKYXZhU2NyaXB0IG9uIHBhZ2UgbG9hZAokKGZ1bmN0aW9uKCkgewogICAgLy8gSW5pdGlhbGl6ZSBwaG9uZSBudW1iZXIgdGV4dCBpbnB1dCBwbHVnaW4KICAgICQoJyNwaG9uZU51bWJlcicpLmludGxUZWxJbnB1dCh7CiAgICAgICAgcmVzcG9uc2l2ZURyb3Bkb3duOiB0cnVlLAogICAgICAgIGF1dG9Gb3JtYXQ6IHRydWUsCiAgICAgICAgdXRpbHNTY3JpcHQ6ICcvc3RhdGljL2pzL2xpYnBob25lbnVtYmVyL2J1aWxkL3V0aWxzLmpzJwogICAgfSk7CgogICAgLy8gSW50ZXJjZXB0IGZvcm0gc3VibWlzc2lvbiBhbmQgc3VibWl0IHRoZSBmb3JtIHdpdGggYWpheAogICAgJCgnI2NvbnRhY3RGb3JtJykub24oJ3N1Ym1pdCcsIGZ1bmN0aW9uKGUpIHsKICAgICAgICAvLyBQcmV2ZW50IHN1Ym1pdCBldmVudCBmcm9tIGJ1YmJsaW5nIGFuZCBhdXRvbWF0aWNhbGx5IAogICAgICAgIC8vIHN1Ym1pdHRpbmcgdGhlIGZvcm0KICAgICAgICBlLnByZXZlbnREZWZhdWx0KCk7CgogICAgICAgIC8vIENhbGwgb3VyIGFqYXggZW5kcG9pbnQgb24gdGhlIHNlcnZlciB0byBpbml0aWFsaXplIHRoZSAKICAgICAgICAvLyBwaG9uZSBjYWxsCiAgICAgICAgJC5hamF4KHsKICAgICAgICAgICAgdXJsOiAnL2NhbGwnLAogICAgICAgICAgICBtZXRob2Q6ICdQT1NUJywKICAgICAgICAgICAgZGF0YVR5cGU6ICdqc29uJywKICAgICAgICAgICAgZGF0YTogewogICAgICAgICAgICAgICAgcGhvbmVOdW1iZXI6ICQoJyNwaG9uZU51bWJlcicpLnZhbCgpCiAgICAgICAgICAgIH0KICAgICAgICB9KS5kb25lKGZ1bmN0aW9uKGRhdGEpIHsKICAgICAgICAgICAgLy8gVGhlIEpTT04gc2VudCBiYWNrIGZyb20gdGhlIHNlcnZlciB3aWxsIGNvbnRhaW4gCiAgICAgICAgICAgIC8vIGEgc3VjY2VzcyBtZXNzYWdlCiAgICAgICAgICAgIGFsZXJ0KGRhdGEubWVzc2FnZSk7CiAgICAgICAgfSkuZmFpbChmdW5jdGlvbihlcnJvcikgewogICAgICAgICAgICBhbGVydChKU09OLnN0cmluZ2lmeShlcnJvcikpOwogICAgICAgIH0pOwogICAgfSk7Cn0pOwo=</textarea>
+</div>
+</div>
+      <div class="saurus-overview">
+        <ul></ul>
+      </div>
+    </div>
+    <div class="saurus-code">
+      <div class="file-path"><span class="crumb-container"></span><i class="fa fa-fw fa-folder"></i></div>
+      <div class="saurus-editor"></div>
+    </div>
+    <div class="saurus-explorer">
+      <div class="saurus-file-list"></div>
+    </div>
+  </div>
+</div>
