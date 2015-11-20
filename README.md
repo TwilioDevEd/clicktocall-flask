@@ -3,9 +3,8 @@
 An example application implementing Click to Call using Twilio.  For a
 step-by-step tutorial, [visit this link](TODO: link).
 
-[![Build
-Status](https://secure.travis-ci.org/TwilioDevEd/clicktocall-flask.png)]
-(http://travis-ci.org/TwilioDevEd/clicktocall-flask)
+[![Build Status](https://travis-ci.org/TwilioDevEd/clicktocall-flask.svg?branch=master)]
+(https://travis-ci.org/TwilioDevEd/clicktocall-flask)
 [![Coverage Status](https://coveralls.io/repos/TwilioDevEd/clicktocall-flask/badge.png)]
 (https://coveralls.io/r/TwilioDevEd/clicktocall-flask)
 
