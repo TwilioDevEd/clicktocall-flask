@@ -1,19 +1,13 @@
 # Click to Call with Flask 
 
-An example application implementing Click to Call using Twilio.  For a
-step-by-step tutorial, [visit this link](TODO: link).
+An example application implementing Click to Call using Twilio.
 
 [![Build Status](https://travis-ci.org/TwilioDevEd/clicktocall-flask.svg?branch=master)]
 (https://travis-ci.org/TwilioDevEd/clicktocall-flask)
 [![Coverage Status](https://coveralls.io/repos/TwilioDevEd/clicktocall-flask/badge.png)]
 (https://coveralls.io/r/TwilioDevEd/clicktocall-flask)
 
-
-Deploy this example app to Heroku now!
-
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/TwilioDevEd/clicktocall-flask)
-
-
+[Read the full tutorial here](https://www.twilio.com/docs/tutorials/walkthrough/click-to-call/python/flask)!
 
 ## Installation
 
