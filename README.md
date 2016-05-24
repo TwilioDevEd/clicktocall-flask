@@ -1,3 +1,7 @@
+<a href="https://www.twilio.com">
+  <img src="https://static0.twilio.com/marketing/bundles/marketing/img/logos/wordmark-red.svg" alt="Twilio" width="250" />
+</a>
+
 # Click to Call with Flask
 
 This is an application example implementing Click to Call using Twilio.
@@ -173,8 +177,3 @@ class ExampleTest(test_twilio.TwiMLTest):
 * No warranty expressed or implied.  Software is as is. Diggity.
 * [MIT License](http://www.opensource.org/licenses/mit-license.html)
 * Lovingly crafted by Twilio Developer Education.
-
-
-[![githalytics.com
-alpha](https://cruel-carlota.pagodabox.com/33a5ddd61dd29dd933422bca2b3dfa0e
-"githalytics.com")](http://githalytics.com/TwilioDevEd/clicktocall-flask)
