@@ -23,31 +23,35 @@ Use Heroku to deploy this app immediately:
 
 ### Getting Started
 
-1) Grab the latest source
-```
-$ git clone git://github.com/TwilioDevEd/clicktocall-flask.git
-```
+1. Grab the latest source.
 
-2) Navigate to folder and create new Heroku Cedar app
-```
-$ heroku create
-```
+   ```bash
+   $ git clone git://github.com/TwilioDevEd/clicktocall-flask.git
+   ```
 
-3) Deploy to Heroku
-```
-$ git push heroku master
-```
+1. Navigate to folder and create new Heroku Cedar app.
 
-4) Scale your dynos
-```
-$ heroku scale web=1
-```
+   ```bash
+   $ heroku create
+   ```
 
-5) Visit the home page of your new Heroku app to see your newly configured app!
-```
-$ heroku open
-```
+1. Deploy to Heroku.
 
+   ```bash
+   $ git push heroku master
+   ```
+
+1. Scale your dynos.
+
+   ```bash
+   $ heroku scale web=1
+   ```
+
+1. Visit the home page of your new Heroku app to see your newly configured app!
+
+   ```bash
+   $ heroku open
+   ```
 
 ### Configuration
 
@@ -60,32 +64,33 @@ This app ships with an auto-configure script that will create a new TwiML
 app. Purchase a new phone number and set your Heroku app's environment
 variables to be used with your new settings.  Here's a quick step-by-step:
 
-1) Make sure you have all dependencies installed
-```bash
-$ make init
-```
+1. Make sure you have all dependencies installed.
 
-2) Run configure script and follow instructions
-```
-$ python configure.py --account_sid ACxxxxxx --auth_token yyyyyyy
-```
+   ```bash
+   $ make init
+   ```
 
-3) For local development, copy/paste the environment variable commands the
-configurator provides to your shell
-```bash
-export TWILIO_ACCOUNT_SID=ACxxxxxx
-export TWILIO_AUTH_TOKEN=yyyyyyyyy
-export TWILIO_APP_SID=APzzzzzzzzzz
-export TWILIO_CALLER_ID=+15556667777
-```
+1. Run configure script and follow instructions.
+
+   ```bash
+   $ python configure.py --account_sid ACxxxxxx --auth_token yyyyyyy
+   ```
+
+1. For local development, copy/paste the environment variable commands the configurator provides to your shell.
+
+   ```bash
+   export TWILIO_ACCOUNT_SID=ACxxxxxx
+   export TWILIO_AUTH_TOKEN=yyyyyyyyy
+   export TWILIO_APP_SID=APzzzzzzzzzz
+   export TWILIO_CALLER_ID=+15556667777
+   ```
 
 Automagic configuration comes with a number of features.  
 `python configure.py --help` to see them all.
 
+#### `local_settings.py`
 
-#### local_settings.py
-
-local_settings.py is a file available on the app route for you to configure
+`local_settings.py` is a file available on the app route for you to configure
 your twilio account credentials manually.  Be sure not to expose your Twilio
 account to a public repo though.
 
@@ -102,20 +107,20 @@ The application configurator will automatically use your environment variables. 
 can set your own TwiML app and phone number if you prefer to.  The environment
 variables are required to configure and run the Twilio and Heroku apps.
 
-1) Set environment variables locally.
+1. Set environment variables locally.
 
-```
-export TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxx
-export TWILIO_AUTH_TOKEN=yyyyyyyyyyyyyyyyy
-export TWILIO_APP_SID=APzzzzzzzzzzzzzzzzzz
-export TWILIO_CALLER_ID=+15556667777
-```
+   ```bash
+   export TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxx
+   export TWILIO_AUTH_TOKEN=yyyyyyyyyyyyyyyyy
+   export TWILIO_APP_SID=APzzzzzzzzzzzzzzzzzz
+   export TWILIO_CALLER_ID=+15556667777
+   ```
 
-2) Run configurator
-```
-$ python configure.py
-```
+1. Run configurator.
 
+   ```bash
+   $ python configure.py
+   ```
 
 ### Development
 
@@ -123,26 +128,27 @@ Getting your local environment setup to work with this app is easy.
 After you configure your app with the steps above use this guide to
 get it going locally.
 
-1) Install the dependencies
-```
-$ make init
-```
+1. Install the dependencies.
 
-2) Launch local development webserver
-```
-$ foreman start
-```
+   ```bash
+   $ make init
+   ```
 
-3) Open browser to [http://localhost:5000](http://localhost:5000).
+1. Launch local development webserver.
 
-4) Tweak away on `clicktocall/app.py`
+   ```bash
+   $ foreman start
+   ```
 
+1. Open browser to [http://localhost:5000](http://localhost:5000).
+
+1. Tweak away on `clicktocall/app.py`.
 
 ## Testing
 
 This app comes with a full testing suite ready for nose.
 
-```
+```bash
 $ make test
 ```
 
@@ -168,7 +174,6 @@ class ExampleTest(test_twilio.TwiMLTest):
     response = self.call(digits="1")
     self.assertTwiML(response)
 ```
-
 
 ## Meta
 
