@@ -6,10 +6,8 @@
 
 This is an application example implementing Click to Call using Twilio.
 
-[![Build Status](https://travis-ci.org/TwilioDevEd/clicktocall-flask.svg?branch=master)]
-(https://travis-ci.org/TwilioDevEd/clicktocall-flask)
-[![Coverage Status](https://coveralls.io/repos/TwilioDevEd/clicktocall-flask/badge.png)]
-(https://coveralls.io/r/TwilioDevEd/clicktocall-flask)
+[![Build Status](https://travis-ci.org/TwilioDevEd/clicktocall-flask.svg?branch=master)](https://travis-ci.org/TwilioDevEd/clicktocall-flask)
+[![Coverage Status](https://coveralls.io/repos/TwilioDevEd/clicktocall-flask/badge.svg)](https://coveralls.io/r/TwilioDevEd/clicktocall-flask)
 
 [Read the full tutorial here](https://www.twilio.com/docs/tutorials/walkthrough/click-to-call/python/flask)!
 
@@ -21,7 +19,7 @@ Step-by-step on how to deploy, configure and develop on this example app.
 
 Use Heroku to deploy this app immediately:
 
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/TwilioDevEd/clicktocall-flask)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/TwilioDevEd/clicktocall-flask)
 
 ### Getting Started
 
