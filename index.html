@@ -14,10 +14,10 @@
 <p><img src="//s3-us-west-2.amazonaws.com/deved/clicktocall.png" alt="Click-to-call Diagram"></p>
 <ol>
 <li><p>A website visitor wants to connect to your organization.  She submits a web form with her
-phone number to receive a call connecting her to your sales or support team. </p>
+phone number to receive a call connecting her to your sales or support team.</p>
 </li>
 <li><p>Your web application receives the submission form. An HTTP request is initiated from your
-application to Twilio to initiate an outbound call. </p>
+application to Twilio to initiate an outbound call.</p>
 </li>
 <li><p>Twilio receives the request and initiates a call to the user&#39;s phone number.</p>
 </li>
@@ -32,8 +32,8 @@ to our sales or support teams.</p>
 <p>This How-To demonstrates how to initialize a call using the <a href="/docs/api/rest/">Twilio REST
 API</a> and how to create a TwiML call logic using the <a href="/docs/api/twiml/say">Say</a> and <a href="/docs/api/twiml/dial">Dial</a> verbs.</p>
 <p>Sounds like a plan? Let&#39;s get started!</p>
-</div><div data-title="Application Overview" data-file="clicktocall/app.py" class="step"><h2 id="our-flask-application">Our Flask Application</h2>
-<p>In this example, we&#39;re using the <a href="http://flask.pocoo.org">Flask framework</a> for Python.
+</div><div data-title="Our Flask Application" data-file="clicktocall/app.py" class="step"><h2 id="our-flask-application">Our Flask Application</h2>
+<p>On this example, we&#39;re using the <a href="http://flask.pocoo.org">Flask framework</a> for Python.
 Flask is a popular, lightweight web framework that provides HTTP request routing,
 server-side HTML rendering, and an extensible stack to process incoming requests.</p>
 <p>To run this application locally, you can download it from the links above.
@@ -47,10 +47,10 @@ directory.  Static assets such as images, stylesheets and JavaScript are located
 <code>clicktocall/static</code>.</p>
 <p>We&#39;ll check that out in a moment, but first we need to configure our application with our
 Twilio account information.</p>
-</div><div data-title="Application Config" data-file="clicktocall/local_settings.py" data-highlight="13-17" class="step"><h2 id="application-configuration">Application Configuration</h2>
-<p>In this file, we pull in all the account configuration we need to run the
+</div><div data-title="Application Configuration" data-file="clicktocall/local_settings.py" data-highlight="13-17" class="step"><h2 id="application-configuration">Application Configuration</h2>
+<p>On this file, we store the account configuration we need to run the
 application. Rather than storing these configuration values in a source
-file, you may want to store them as system environment variables. In this
+file, you may want to store them as system environment variables. On this
 Python code, we&#39;re reading in values from these variables. On systems such
 as OSX or Linux, you can quickly create new environment variables with
 <code>export YOUR_VARIABLE=somevalue</code>.</p>
@@ -64,25 +64,25 @@ dashboard</a> - let&#39;s briefly explain what these variables are:</p>
 </ul>
 <p>Okay, now that our app is configured, let&#39;s move on to the code.
 We&#39;ll begin by showing how we render the home page for this application.</p>
-</div><div data-title="Import Dependencies" data-file="clicktocall/app.py" data-highlight="1-8" class="step"><h2 id="import-dependencies">Import Dependencies</h2>
+</div><div data-title="Importing Dependencies" data-file="clicktocall/app.py" data-highlight="1-8" class="step"><h2 id="importing-dependencies">Importing Dependencies</h2>
 <p>We&#39;ll kick off our project by importing some of our dependencies.  First, we&#39;ll
 get a number features from the Flask framework that we are going to use: the
 <code>Flask</code> class to create our application, <code>render_template</code> to deliver our HTML
 to the user, <code>request</code> to process the information in POSTs we receive from our
-users interacting with our form and Twilio, and <code>url_for</code> to construct the URI
+users interacting with our form and Twilio, and <code>url_for</code> to construct the URL
 we need to share with Twilio for our TwiML.</p>
-<p>Next, we&#39;ll import a couple helpful bits from the Twilio python module: <code>twiml</code>
+<p>Next, we&#39;ll import a couple helpful bits from the Twilio python module: <code>TwiML</code>
 to help generate the instructions we give to Twilio for our calls and
 <code>TwilioRestClient</code> to initiate those calls with Twilio.</p>
-</div><div data-title="How it Works" data-file="app.py" class="step"><h2 id="flask-boilerplate">Flask Boilerplate</h2>
+</div><div data-title="Flask Boilerplate" data-file="app.py" class="step"><h2 id="flask-boilerplate">Flask Boilerplate</h2>
 <p>First, we&#39;ll create a file in our project root called <code>app.py</code> to seperate the
 boilerplate to run our Flask app from the logic of our Click to Call
 implementation.  This includes importing the <code>app</code> object we create in
 <code>clicktocall/app.py</code> and then running it if the script is executed.</p>
-<p>For convenience sake for Heroku users, if the <code>PORT</code> environment variable
+<p>For Heroku users&#39; convenience, if the <code>PORT</code> environment variable
 exists, we&#39;ll run the app on the PORT the environment specified.  If not, we&#39;ll
 run on port 5000 and turn on debug mode for as we work on our project.</p>
-</div><div data-title="Route: Home Page" data-file="clicktocall/app.py" data-highlight="15-19" class="step"><h2 id="rendering-the-home-page">Rendering the Home Page</h2>
+</div><div data-title="Rendering the Home Page" data-file="clicktocall/app.py" data-highlight="15-19" class="step"><h2 id="rendering-the-home-page">Rendering the Home Page</h2>
 <p>This route is pretty simple - for requests to the root URL of our web app,
 we will render a <a href="http://jinja.pocoo.org/docs/dev/">Jinja2</a> template with
 the HTML, CSS, and JavaScript to drive our click-to-call page.</p>
@@ -90,21 +90,21 @@ the HTML, CSS, and JavaScript to drive our click-to-call page.</p>
 <p>This route will respond to an AJAX request from the UI for our click-to-call
 web page, which we&#39;ll examine in a moment. Here, we use an authenticated
 Twilio REST API client to make an outbound phone call to the phone number
-that was submitted by the user. </p>
+that was submitted by the user.</p>
 <p>For an outbound phone call, we need to specify a public URL for Twilio to
 request once the call has connected, so it knows what to do next. In a click
 to call application, these instructions could be as simple as &quot;dial our
 sales number&quot;, or it could put a user into a full blown IVR system you&#39;ve
 built.</p>
-<p>In this request, we assume that the domain that your app is running on is
-stored in the &quot;host&quot; header (probable in production), but you could change
+<p>For this request, we assume that the domain that your app is running on, is
+stored in the &quot;host&quot; header (probably in production), but you could change
 this to be anything. When Twilio dials out to the user, it will use the
 TwiML generated by the <code>/outbound</code> route, which we&#39;ll examine next.</p>
-</div><div data-title="TwiML Response" data-file="clicktocall/app.py" data-highlight="47-61" class="step"><h2 id="controller-twiml-instructions">Controller - TwiML Instructions</h2>
-<p>Before Twilio will connect a call, it needs to know what to do once the call
+</div><div data-title="Controller - TwiML Instructions" data-file="clicktocall/app.py" data-highlight="47-61" class="step"><h2 id="controller-twiml-instructions">Controller - TwiML Instructions</h2>
+<p>Before Twilio connects a call, it needs to know what to do once the call
 is made. Twilio will request these instructions from your web app as an XML
-document, using tags that we call <a href="/docs/api/twiml">TwiML</a> to tell it what
-to do. </p>
+document, using tags that we call <a href="/docs/api/twiml">TwiML</a> that tells it what
+to do.</p>
 <p>In this route, we are going to use the Twilio Python module to generate an
 XML document that looks like this, using the Twiml <code>Say</code> and <code>Dial</code> tags:</p>
 <pre><code>&lt;Response&gt;
@@ -118,7 +118,7 @@ XML document that looks like this, using the Twiml <code>Say</code> and <code>Di
 &lt;/Response&gt;
 </code></pre><p>That&#39;s most of the interesting bits on the back end - let&#39;s move to the
 front end code to see how we&#39;re collecting the phone number from the user.</p>
-</div><div data-title="UI: Page Structure" data-file="clicktocall/templates/index.html" data-highlight="2-12" class="step"><h2 id="ui-styles">UI: Styles</h2>
+</div><div data-title="UI: Styles" data-file="clicktocall/templates/index.html" data-highlight="2-12" class="step"><h2 id="ui-styles">UI: Styles</h2>
 <p>Here on our home page, we generate an HTML page that we present to a user so
 they can click a button to get connected with us. To make the page a little
 more friendly, we include styles from <a href="http://getbootstrap.com/">Twitter
@@ -128,16 +128,16 @@ international phone numbers.</p>
 </div><div data-title="UI: Form" data-file="clicktocall/templates/index.html" data-highlight="27-43" class="step"><h2 id="ui-form-structure">UI: Form Structure</h2>
 <p>In the body of our HTML template, we generate a form with a single text
 field for the user to enter their phone number. We assign unique IDs to both
-the form and the phone number text field, as we will need both in the
+the form and the phone number text field, since we will need them in the
 JavaScript we write to submit this form. Let&#39;s take a look at that code
 next.</p>
-</div><div data-title="UI: Phone Input" data-file="clicktocall/static/js/app.js" data-highlight="4-8" class="step"><h2 id="ui-smart-phone-number-field">UI: Smart Phone Number Field</h2>
+</div><div data-title="UI: Smart Phone Number Field" data-file="clicktocall/static/js/app.js" data-highlight="4-8" class="step"><h2 id="ui-smart-phone-number-field">UI: Smart Phone Number Field</h2>
 <p>Our click to call page makes use of a <a href="https://github.com/Bluefieldscom/intl-tel-input">jQuery
 plugin</a> to present a nice
 looking, auto-validating phone number input.  Here, we tell the plugin to
 decorate a text field with a given ID and tell it to validate numbers as the
 user types.</p>
-</div><div data-title="UI: Submitting Form" data-file="clicktocall/static/js/app.js" data-highlight="10-32" class="step"><h2 id="ui-submitting-the-form">UI: Submitting the Form</h2>
+</div><div data-title="UI: Submitting the Form" data-file="clicktocall/static/js/app.js" data-highlight="10-32" class="step"><h2 id="ui-submitting-the-form">UI: Submitting the Form</h2>
 <p>This chunk of code overrides the default form submission behavior of the
 HTML page to asynchronously submit the form via Ajax.</p>
 <p>When the form is submitted, we listen for that event in JavaScript, and
@@ -148,7 +148,7 @@ passing along the phone number which was entered by the user.</p>
 either a success message or an error.  In the success case, we display an
 alert indicating the call was connected successfully.</p>
 </div><div data-title="Where to Next?" class="step"><h2 id="where-to-next-">Where to next?</h2>
-<p>That&#39;s it! We&#39;ve just implemented click to call that allow your customers to connect with a
+<p>That&#39;s it! We&#39;ve just implemented click to call that allows your customers to connect with a
 support agent.</p>
 <p>If you&#39;re a Python developer working with Twilio you might enjoy these
 other tutorials:</p>
@@ -159,9 +159,9 @@ your own survey in Python.</p>
 <p><a href="//www.twilio.com/docs/tutorials/walkthrough/server-notifications/python/django"><strong>SMS and MMS Notifications</strong></a></p>
 <p>Send SMS alerts to a list of system administrators if something goes wrong on your server.</p>
 <h3 id="did-this-help-">Did this help?</h3>
-<p>Thanks for checking out this tutorial! If you have any feedback
+<p>Thanks for checking this tutorial out! If you have any feedback
 to share with us, we&#39;d love to hear it.
-<a href="//www.twilio.com/help/contact">Contact support</a> to let us know what you think.</p>
+<a href="mailto:deved-oss@twilio.com">Contact the Twilio Developer Education Team</a> to let us know what you think.</p>
 </div>
 <div class="saurus-files" style="display:none;"><textarea class="saurus-file" data-file="clicktocall/app.py" data-mode="python">ZnJvbSBmbGFzayBpbXBvcnQgRmxhc2sKZnJvbSBmbGFzayBpbXBvcnQganNvbmlmeQpmcm9tIGZsYXNrIGltcG9ydCByZW5kZXJfdGVtcGxhdGUKZnJvbSBmbGFzayBpbXBvcnQgcmVxdWVzdApmcm9tIGZsYXNrIGltcG9ydCB1cmxfZm9yCgpmcm9tIHR3aWxpbyBpbXBvcnQgdHdpbWwKZnJvbSB0d2lsaW8ucmVzdCBpbXBvcnQgVHdpbGlvUmVzdENsaWVudAoKIyBEZWNsYXJlIGFuZCBjb25maWd1cmUgYXBwbGljYXRpb24KYXBwID0gRmxhc2soX19uYW1lX18sIHN0YXRpY191cmxfcGF0aD0nL3N0YXRpYycpCmFwcC5jb25maWcuZnJvbV9weWZpbGUoJ2xvY2FsX3NldHRpbmdzLnB5JykKCgojIFJvdXRlIGZvciBDbGljayB0byBDYWxsIGRlbW8gcGFnZS4KQGFwcC5yb3V0ZSgnLycpCmRlZiBpbmRleCgpOgogICAgcmV0dXJuIHJlbmRlcl90ZW1wbGF0ZSgnaW5kZXguaHRtbCcsCiAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbmZpZ3VyYXRpb25fZXJyb3I9Tm9uZSkKCgojIFZvaWNlIFJlcXVlc3QgVVJMCkBhcHAucm91dGUoJy9jYWxsJywgbWV0aG9kcz1bJ1BPU1QnXSkKZGVmIGNhbGwoKToKICAgICMgR2V0IHBob25lIG51bWJlciB3ZSBuZWVkIHRvIGNhbGwKICAgIHBob25lX251bWJlciA9IHJlcXVlc3QuZm9ybS5nZXQoJ3Bob25lTnVtYmVyJywgTm9uZSkKCiAgICB0cnk6CiAgICAgICAgdHdpbGlvX2NsaWVudCA9IFR3aWxpb1Jlc3RDbGllbnQoYXBwLmNvbmZpZ1snVFdJTElPX0FDQ09VTlRfU0lEJ10sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYXBwLmNvbmZpZ1snVFdJTElPX0FVVEhfVE9LRU4nXSkKICAgIGV4Y2VwdCBFeGNlcHRpb24gYXMgZToKICAgICAgICBtc2cgPSAnTWlzc2luZyBjb25maWd1cmF0aW9uIHZhcmlhYmxlOiB7MH0nLmZvcm1hdChlKQogICAgICAgIHJldHVybiBqc29uaWZ5KHsnZXJyb3InOiBtc2d9KQoKICAgIHRyeToKICAgICAgICB0d2lsaW9fY2xpZW50LmNhbGxzLmNyZWF0ZShmcm9tXz1hcHAuY29uZmlnWydUV0lMSU9fQ0FMTEVSX0lEJ10sCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdG89cGhvbmVfbnVtYmVyLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHVybD11cmxfZm9yKCcub3V0Ym91bmQnLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF9leHRlcm5hbD1UcnVlKSkKICAgIGV4Y2VwdCBFeGNlcHRpb24gYXMgZToKICAgICAgICBhcHAubG9nZ2VyLmVycm9yKGUpCiAgICAgICAgcmV0dXJuIGpzb25pZnkoeydlcnJvcic6IHN0cihlKX0pCgogICAgcmV0dXJuIGpzb25pZnkoeydtZXNzYWdlJzogJ0NhbGwgaW5jb21pbmchJ30pCgoKQGFwcC5yb3V0ZSgnL291dGJvdW5kJywgbWV0aG9kcz1bJ1BPU1QnXSkKZGVmIG91dGJvdW5kKCk6CiAgICByZXNwb25zZSA9IHR3aW1sLlJlc3BvbnNlKCkKCiAgICByZXNwb25zZS5zYXkoIlRoYW5rIHlvdSBmb3IgY29udGFjdGluZyBvdXIgc2FsZXMgZGVwYXJ0bWVudC4gSWYgdGhpcyAiCiAgICAgICAgICAgICAgICAgImNsaWNrIHRvIGNhbGwgYXBwbGljYXRpb24gd2FzIGluIHByb2R1Y3Rpb24sIHdlIHdvdWxkICIKICAgICAgICAgICAgICAgICAiZGlhbCBvdXQgdG8geW91ciBzYWxlcyB0ZWFtIHdpdGggdGhlIERpYWwgdmVyYi4iLAogICAgICAgICAgICAgICAgIHZvaWNlPSdhbGljZScpCiAgICAnJycKICAgICMgVW5jb21tZW50IHRoaXMgY29kZSBhbmQgcmVwbGFjZSB0aGUgbnVtYmVyIHdpdGggdGhlIG51bWJlciB5b3Ugd2FudCAKICAgICMgeW91ciBjdXN0b21lcnMgdG8gY2FsbC4KICAgIHdpdGggcmVzcG9uc2UuZGlhbCgpIGFzIGRpYWw6CiAgICAgICAgZGlhbC5udW1iZXIoIisxNjUxODY3NTMwOSIpCiAgICAnJycKICAgIHJldHVybiBzdHIocmVzcG9uc2UpCgoKIyBSb3V0ZSBmb3IgTGFuZGluZyBQYWdlIGFmdGVyIEhlcm9rdSBkZXBsb3kuCkBhcHAucm91dGUoJy9sYW5kaW5nLmh0bWwnKQpkZWYgbGFuZGluZygpOgogICAgcmV0dXJuIHJlbmRlcl90ZW1wbGF0ZSgnbGFuZGluZy5odG1sJywKICAgICAgICAgICAgICAgICAgICAgICAgICAgY29uZmlndXJhdGlvbl9lcnJvcj1Ob25lKQo=</textarea>
 <textarea class="saurus-file" data-file="clicktocall/local_settings.py" data-mode="python">JycnCkNvbmZpZ3VyYXRpb24gU2V0dGluZ3MKJycnCgonJycgVW5jb21tZW50IHRvIGNvbmZpZ3VyZSB1c2luZyB0aGUgZmlsZS4gIApXQVJOSU5HOiBCZSBjYXJlZnVsIG5vdCB0byBwb3N0IHlvdXIgYWNjb3VudCBjcmVkZW50aWFscyBvbiBHaXRIdWIuCgpUV0lMSU9fQUNDT1VOVF9TSUQgPSAiQUN4eHh4eHh4eHh4eHh4IiAKVFdJTElPX0FVVEhfVE9LRU4gPSAieXl5eXl5eXl5eXl5eXl5eSIKVFdJTElPX0NBTExFUl9JRCA9ICIrMTc3Nzg4ODk5OTkiCicnJwoKaW1wb3J0IG9zClRXSUxJT19BQ0NPVU5UX1NJRCA9IG9zLmVudmlyb24uZ2V0KCdUV0lMSU9fQUNDT1VOVF9TSUQnLCBOb25lKQpUV0lMSU9fQVVUSF9UT0tFTiA9IG9zLmVudmlyb24uZ2V0KCdUV0lMSU9fQVVUSF9UT0tFTicsIE5vbmUpClRXSUxJT19DQUxMRVJfSUQgPSBvcy5lbnZpcm9uLmdldCgnVFdJTElPX0NBTExFUl9JRCcsIE5vbmUpClRXSUxJT19BUFBfU0lEID0gb3MuZW52aXJvbi5nZXQoJ1RXSUxJT19BUFBfU0lEJywgTm9uZSkK</textarea>
