@@ -7,10 +7,10 @@
     ![Click-to-call Diagram](//s3-us-west-2.amazonaws.com/deved/clicktocall.png)
 
     1. A website visitor wants to connect to your organization.  She submits a web form with her
-    phone number to receive a call connecting her to your sales or support team. 
+    phone number to receive a call connecting her to your sales or support team.
 
     1. Your web application receives the submission form. An HTTP request is initiated from your
-    application to Twilio to initiate an outbound call. 
+    application to Twilio to initiate an outbound call.
 
     1. Twilio receives the request and initiates a call to the user's phone number.
 
@@ -30,11 +30,11 @@
     [rest]: /docs/api/rest/
     [dial]: /docs/api/twiml/dial
     [say]: /docs/api/twiml/say
-.step(data-title="Application Overview", data-file='clicktocall/app.py')
+.step(data-title="Our Flask Application", data-file='clicktocall/app.py')
   :markdown
     ## Our Flask Application
 
-    In this example, we're using the [Flask framework](http://flask.pocoo.org) for Python.
+    On this example, we're using the [Flask framework](http://flask.pocoo.org) for Python.
     Flask is a popular, lightweight web framework that provides HTTP request routing,
     server-side HTML rendering, and an extensible stack to process incoming requests.
 
@@ -53,13 +53,13 @@
     Twilio account information.
 
 
-.step(data-title='Application Config', data-file='clicktocall/local_settings.py', data-highlight='13-17')
+.step(data-title='Application Configuration', data-file='clicktocall/local_settings.py', data-highlight='13-17')
   :markdown
     ## Application Configuration
 
-    In this file, we pull in all the account configuration we need to run the
+    On this file, we store the account configuration we need to run the
     application. Rather than storing these configuration values in a source
-    file, you may want to store them as system environment variables. In this
+    file, you may want to store them as system environment variables. On this
     Python code, we're reading in values from these variables. On systems such
     as OSX or Linux, you can quickly create new environment variables with
     `export YOUR_VARIABLE=somevalue`.
@@ -75,21 +75,22 @@
     Okay, now that our app is configured, let's move on to the code.
     We'll begin by showing how we render the home page for this application.
 
-.step(data-title='Import Dependencies', data-file='clicktocall/app.py', data-highlight='1-8')
+.step(data-title='Importing Dependencies', data-file='clicktocall/app.py', data-highlight='1-8')
   :markdown
-    ## Import Dependencies
+    ## Importing Dependencies
 
     We'll kick off our project by importing some of our dependencies.  First, we'll
     get a number features from the Flask framework that we are going to use: the
     `Flask` class to create our application, `render_template` to deliver our HTML
     to the user, `request` to process the information in POSTs we receive from our
-    users interacting with our form and Twilio, and `url_for` to construct the URI
+    users interacting with our form and Twilio, and `url_for` to construct the URL
     we need to share with Twilio for our TwiML.
 
-    Next, we'll import a couple helpful bits from the Twilio python module: `twiml`
+    Next, we'll import a couple helpful bits from the Twilio python module: `TwiML`
     to help generate the instructions we give to Twilio for our calls and
     `TwilioRestClient` to initiate those calls with Twilio.
-.step(data-title='How it Works', data-file='app.py')
+
+.step(data-title='Flask Boilerplate', data-file='app.py')
   :markdown
     ## Flask Boilerplate
 
@@ -98,10 +99,11 @@
     implementation.  This includes importing the `app` object we create in
     `clicktocall/app.py` and then running it if the script is executed.
 
-    For convenience sake for Heroku users, if the `PORT` environment variable
+    For Heroku users' convenience, if the `PORT` environment variable
     exists, we'll run the app on the PORT the environment specified.  If not, we'll
     run on port 5000 and turn on debug mode for as we work on our project.
-.step(data-title="Route: Home Page", data-file='clicktocall/app.py', data-highlight="15-19")
+
+.step(data-title="Rendering the Home Page", data-file='clicktocall/app.py', data-highlight="15-19")
   :markdown
     ## Rendering the Home Page
 
@@ -117,7 +119,7 @@
     This route will respond to an AJAX request from the UI for our click-to-call
     web page, which we'll examine in a moment. Here, we use an authenticated
     Twilio REST API client to make an outbound phone call to the phone number
-    that was submitted by the user. 
+    that was submitted by the user.
 
     For an outbound phone call, we need to specify a public URL for Twilio to
     request once the call has connected, so it knows what to do next. In a click
@@ -125,19 +127,19 @@
     sales number", or it could put a user into a full blown IVR system you've
     built.
 
-    In this request, we assume that the domain that your app is running on is
-    stored in the "host" header (probable in production), but you could change
+    For this request, we assume that the domain that your app is running on, is
+    stored in the "host" header (probably in production), but you could change
     this to be anything. When Twilio dials out to the user, it will use the
     TwiML generated by the `/outbound` route, which we'll examine next.
 
-.step(data-title='TwiML Response', data-file='clicktocall/app.py', data-highlight='47-61')
+.step(data-title='Controller - TwiML Instructions', data-file='clicktocall/app.py', data-highlight='47-61')
   :markdown
     ## Controller - TwiML Instructions
 
-    Before Twilio will connect a call, it needs to know what to do once the call
+    Before Twilio connects a call, it needs to know what to do once the call
     is made. Twilio will request these instructions from your web app as an XML
-    document, using tags that we call [TwiML](/docs/api/twiml) to tell it what
-    to do. 
+    document, using tags that we call [TwiML](/docs/api/twiml) that tells it what
+    to do.
 
     In this route, we are going to use the Twilio Python module to generate an
     XML document that looks like this, using the Twiml `Say` and `Dial` tags:
@@ -154,7 +156,8 @@
 
     That's most of the interesting bits on the back end - let's move to the
     front end code to see how we're collecting the phone number from the user.
-.step(data-title='UI: Page Structure', data-file='clicktocall/templates/index.html', data-highlight="2-12")
+
+.step(data-title='UI: Styles', data-file='clicktocall/templates/index.html', data-highlight="2-12")
   :markdown
     ## UI: Styles
 
@@ -164,18 +167,19 @@
     Bootstrap](http://getbootstrap.com/). We also include styles for a
     third-party jQuery plugin that make it easier to collect and validate
     international phone numbers.
+
 .step(data-title="UI: Form", data-file='clicktocall/templates/index.html', data-highlight="27-43")
   :markdown
     ## UI: Form Structure
 
     In the body of our HTML template, we generate a form with a single text
     field for the user to enter their phone number. We assign unique IDs to both
-    the form and the phone number text field, as we will need both in the
+    the form and the phone number text field, since we will need them in the
     JavaScript we write to submit this form. Let's take a look at that code
     next.
 
 
-.step(data-title='UI: Phone Input', data-file='clicktocall/static/js/app.js', data-highlight="4-8")
+.step(data-title='UI: Smart Phone Number Field', data-file='clicktocall/static/js/app.js', data-highlight="4-8")
   :markdown
     ## UI: Smart Phone Number Field
 
@@ -185,9 +189,10 @@
     decorate a text field with a given ID and tell it to validate numbers as the
     user types.
 
-.step(data-title='UI: Submitting Form', data-file='clicktocall/static/js/app.js', data-highlight='10-32')
+.step(data-title='UI: Submitting the Form', data-file='clicktocall/static/js/app.js', data-highlight='10-32')
   :markdown
     ## UI: Submitting the Form
+
     This chunk of code overrides the default form submission behavior of the
     HTML page to asynchronously submit the form via Ajax.
 
@@ -204,7 +209,7 @@
   :markdown
     ## Where to next?
 
-    That's it! We've just implemented click to call that allow your customers to connect with a
+    That's it! We've just implemented click to call that allows your customers to connect with a
     support agent.
 
     If you're a Python developer working with Twilio you might enjoy these
@@ -222,6 +227,6 @@
 
     ### Did this help?
 
-    Thanks for checking out this tutorial! If you have any feedback
+    Thanks for checking this tutorial out! If you have any feedback
     to share with us, we'd love to hear it.
-    [Contact support](//www.twilio.com/help/contact) to let us know what you think.
+    [Contact the Twilio Developer Education Team](mailto:deved-oss@twilio.com) to let us know what you think.
