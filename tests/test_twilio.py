@@ -1,6 +1,5 @@
 import unittest
-import json
-from mock import Mock, patch
+from mock import patch
 
 from app import app
 
