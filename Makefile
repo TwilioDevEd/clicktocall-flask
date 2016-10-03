@@ -1,8 +1,8 @@
 init:
-	pip install -r requirements.txt --use-mirrors
+	pip install -r requirements.txt
 
 test:
-	nosetests -v tests
+	tox
 
-configure:
-	python configure.py
+run:
+	python app.py

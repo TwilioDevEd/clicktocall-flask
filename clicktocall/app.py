@@ -5,7 +5,7 @@ from flask import request
 from flask import url_for
 
 from twilio import twiml
-from twilio.rest import TwilioRestClient
+from twilio.rest import Client
 
 # Declare and configure application
 app = Flask(__name__, static_url_path='/static')
@@ -26,8 +26,8 @@ def call():
     phone_number = request.form.get('phoneNumber', None)
 
     try:
-        twilio_client = TwilioRestClient(app.config['TWILIO_ACCOUNT_SID'],
-                                         app.config['TWILIO_AUTH_TOKEN'])
+        twilio_client = Client(app.config['TWILIO_ACCOUNT_SID'],
+                               app.config['TWILIO_AUTH_TOKEN'])
     except Exception as e:
         msg = 'Missing configuration variable: {0}'.format(e)
         return jsonify({'error': msg})
@@ -53,7 +53,7 @@ def outbound():
                  "dial out to your sales team with the Dial verb.",
                  voice='alice')
     '''
-    # Uncomment this code and replace the number with the number you want 
+    # Uncomment this code and replace the number with the number you want
     # your customers to call.
     with response.dial() as dial:
         dial.number("+16518675309")

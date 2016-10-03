@@ -1,11 +1,8 @@
 import unittest
 import json
-from mock import Mock
-from mock import patch
+from mock import Mock, patch
 
-from twilio.exceptions import TwilioException
-
-from .context import app
+from app import app
 
 app.config['TWILIO_ACCOUNT_SID'] = 'ACxxxxxx'
 app.config['TWILIO_AUTH_TOKEN'] = 'yyyyyyyyy'
@@ -71,44 +68,19 @@ class ClickToCallTests(TwiMLTest):
         response = self.call(url='/outbound')
         self.assertTwiML(response)
 
-    @patch("twilio.rest.resources.base.make_request")
-    def test_call(self, mock):
-        expected_params = {'From': app.config['TWILIO_CALLER_ID'],
-                           'To': '+15556667777',
-                           'Url': 'http://localhost/outbound'}
+    def test_call(self):
+        with patch('twilio.rest.api.v2010.account.call.CallList.create') as mock:
+            response = self.app.post('/call',
+                                     data={'phoneNumber': '+15556667777'})
 
-        api_response = Mock()
-        api_response.content = json.dumps(expected_params)
-        api_response.status_code = 201
-        mock.return_value = api_response
-
-        response = self.app.post('/call',
-                                 data={'phoneNumber': '+15556667777'})
-
+        # Assert
         self.assertEquals("200 OK", response.status)
-
-        self.assertTrue(mock.called, "Call was not made: "
-                        "{0}".format(response.data))
-        self.assertEquals(expected_params, mock.call_args[1]['data'],
-                          "Did not get expected parameters: "
-                          "{0}".format(mock.call_args))
-
-    @patch("twilio.rest.resources.base.make_request")
-    def test_call_error_handling(self, mock):
-        mock.return_value = Mock()
-
-        def raiseException(*args, **kwargs):
-            raise TwilioException("Test error.")
-
-        mock.side_effect = raiseException
-
-        response = self.app.post('/call',
-                                 data={'phoneNumber': '+15556667777'})
-
-        self.assertEquals("200 OK", response.status)
-        self.assertTrue(b"Test error" in response.data, "Could not "
-                        "find error passed through to JSON result: "
-                        "{0}".format(response.data))
+        self.assertTrue(mock.called)
+        mock.assert_called_with(
+            to='+15556667777',
+            from_=app.config['TWILIO_CALLER_ID'],
+            url='http://localhost/outbound'
+        )
 
 
 class NoCredentialsTests(unittest.TestCase):
