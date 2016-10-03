@@ -1,5 +1,5 @@
 .chapter(data-title='Click to Call Flask')
-  .step(data-title='How It Works!', data-file='clicktocall/local_settings.py')
+  .step(data-title='How It Works!', data-file='.env.example')
     :markdown
       ## How It Works
 
@@ -46,7 +46,7 @@
       Let's put our Twilio credentials in a place where our application can access them. For the
       purposes of this tutorial we'll place them as environment variables that our application can read.
 
-      You can find your Twilio credentials in your [Account Dashboard](//www.twilio.com/user/account).
+      You can find your Twilio credentials in your [Account Dashboard](//www.twilio.com/console).
 
       For more instructions on how to run the application refer to the [app's
       readme file](//github.com/TwilioDevEd/clicktocall-flask/blob/master/README.md).
@@ -89,7 +89,7 @@
     :markdown
       ## Initiate Client Object
 
-       First we initiate a `TwilioRestClient` object with our Account SID and Auth Token. This is essentially
+       First we initiate a `Client` object with our Account SID and Auth Token. This is essentially
        our Python REST API handler, which we could use to send SMS or a myriad of other things. But for
        now we just need it to get access to the object that we're going to use to create phone calls.
 
