@@ -113,7 +113,7 @@ class ClickToCallTests(TwiMLTest):
         self.assertTrue(mock.called)
         mock.assert_called_with(
             to='+15556667777',
-            from_=app.config['TWILIO_CALLER_ID'],
+            from_=app.config['TWILIO_PHONE'],
             url='http://localhost/outbound'
         )
 
