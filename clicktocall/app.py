@@ -24,6 +24,7 @@ def index():
 def call():
     # Get phone number we need to call
     phone_number = request.form.get('phoneNumber', None)
+    sales_number = request.form.get('salesNumber', None)
 
     try:
         twilio_client = TwilioRestClient(app.config['TWILIO_ACCOUNT_SID'],
@@ -36,7 +37,8 @@ def call():
         twilio_client.calls.create(from_=app.config['TWILIO_PHONE'],
                                    to=phone_number,
                                    url=url_for('.outbound',
-                                               _external=True))
+                                               _external=True,
+                                               salesNumber=sales_number))
     except Exception as e:
         app.logger.error(e)
         return jsonify({'error': str(e)})
@@ -44,20 +46,17 @@ def call():
     return jsonify({'message': 'Call incoming!'})
 
 
-@app.route('/outbound', methods=['POST'])
-def outbound():
+@app.route('/outbound/<salesNumber>', methods=['POST'])
+def outbound(salesNumber):
     response = twiml.Response()
 
-    response.say("Thank you for contacting our sales department. If this "
-                 "click to call application was in production, we would "
-                 "dial out to your sales team with the Dial verb.",
+    response.say("Thanks for contacting our sales department. Our next"
+                 "available representative will take your call.",
                  voice='alice')
-    '''
-    # Uncomment this code and replace the number with the number you want 
-    # your customers to call.
+
     with response.dial() as dial:
-        dial.number("+16518675309")
-    '''
+        dial.number(salesNumber)
+
     return str(response)
 
 
