@@ -35,7 +35,7 @@ class Configure(object):
     def __init__(self, account_sid=local_settings.TWILIO_ACCOUNT_SID,
                  auth_token=local_settings.TWILIO_AUTH_TOKEN,
                  app_sid=local_settings.TWILIO_APP_SID,
-                 phone_number=local_settings.TWILIO_CALLER_ID,
+                 phone_number=local_settings.TWILIO_PHONE,
                  voice_url='/voice',
                  sms_url='/sms',
                  host=None, **kwargs):
@@ -83,7 +83,7 @@ class Configure(object):
             configuration = {'TWILIO_ACCOUNT_SID': self.account_sid,
                              'TWILIO_AUTH_TOKEN': self.auth_token,
                              'TWILIO_APP_SID': self.app_sid,
-                             'TWILIO_CALLER_ID': self.phone_number}
+                             'TWILIO_PHONE': self.phone_number}
             self.setHerokuEnvironmentVariables(**configuration)
 
             # Ensure local environment variables are set.

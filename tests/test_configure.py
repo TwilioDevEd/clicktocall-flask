@@ -323,7 +323,7 @@ class HerokuTest(ConfigureTest):
         configuration = {'TWILIO_ACCOUNT_SID': self.configure.account_sid,
                          'TWILIO_AUTH_TOKEN': self.configure.auth_token,
                          'TWILIO_APP_SID': self.configure.app_sid,
-                         'TWILIO_CALLER_ID': self.configure.phone_number}
+                         'TWILIO_PHONE': self.configure.phone_number}
 
         self.configure.setHerokuEnvironmentVariables(**configuration)
         args, kwargs = mock_call.call_args

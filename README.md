@@ -82,7 +82,7 @@ variables to be used with your new settings.  Here's a quick step-by-step:
    export TWILIO_ACCOUNT_SID=ACxxxxxx
    export TWILIO_AUTH_TOKEN=yyyyyyyyy
    export TWILIO_APP_SID=APzzzzzzzzzz
-   export TWILIO_CALLER_ID=+15556667777
+   export TWILIO_PHONE=+15556667777
    ```
 
 Automagic configuration comes with a number of features.  
@@ -98,7 +98,7 @@ account to a public repo though.
 ACCOUNT_SID = "ACxxxxxxxxxxxxx"
 AUTH_TOKEN = "yyyyyyyyyyyyyyyy"
 TWILIO_APP_SID = "APzzzzzzzzz"
-TWILIO_CALLER_ID = "+17778889999"
+TWILIO_PHONE = "+17778889999"
 ```
 
 #### Setting Your Own Environment Variables
@@ -113,7 +113,7 @@ variables are required to configure and run the Twilio and Heroku apps.
    export TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxx
    export TWILIO_AUTH_TOKEN=yyyyyyyyyyyyyyyyy
    export TWILIO_APP_SID=APzzzzzzzzzzzzzzzzzz
-   export TWILIO_CALLER_ID=+15556667777
+   export TWILIO_PHONE=+15556667777
    ```
 
 1. Run configurator.

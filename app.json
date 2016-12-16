@@ -22,7 +22,7 @@
             "description": "Your Twilio account's secret key, found here: https://www.twilio.com/user/account",
             "value": "yyyyyyyyyyyyyyyyyy"
         },
-        "TWILIO_CALLER_ID": {
+        "TWILIO_PHONE": {
             "description": "A Twilio number assigned to your account in E.164 format, found here: https://www.twilio.com/user/account/phone-numbers/incoming",
             "value": "+15556667777"
         }
