@@ -51,20 +51,20 @@
       For more instructions on how to run the application refer to the [app's
       readme file](//github.com/TwilioDevEd/clicktocall-flask/blob/master/README.md).
 
-  .step(data-title='The Web Form', data-file="clicktocall/templates/index.html", data-highlight="27-43")
+  .step(data-title='The Web Form', data-file="clicktocall/templates/index.html", data-highlight="25-41")
     :markdown
       ## The Web Form
 
       The first step on creating a real click-to-call solution is by building the form that your
       user needs to fill on the web. No need to overthink this, the real goal is to POST the User's
-      phone number to your controller.
+      phone number and the sales team number to your controller.
 
       So what information does this form need? An input for the phone number and
       a submit button. Since the page doesn't need to render new content after clicking
       on submit, we decided to implement the POST action via Ajax using jQuery.
       Let's take a look at it.
 
-  .step(data-title='Submit the Form', data-file='clicktocall/static/js/app.js', data-highlight="10-32")
+  .step(data-title='Submit the Form', data-file='clicktocall/static/js/app.js', data-highlight="10-33")
     :markdown
       ## Submit the Form
 
@@ -85,7 +85,7 @@
       call the user.
 
   .step(data-title='Initiate Client Object', data-file='clicktocall/app.py',
-    data-highlight="29-30")
+    data-highlight="30-31")
     :markdown
       ## Initiate Client Object
 
@@ -94,7 +94,7 @@
        now we just need it to get access to the object that we're going to use to create phone calls.
 
   .step(data-title="Making a Phone Call", data-file='clicktocall/app.py',
-    data-highlight="36-39")
+    data-highlight="37-41")
     :markdown
       ## Making a Phone Call
 
@@ -107,7 +107,7 @@
       [url]: //www.twilio.com/docs/api/rest/making-calls#url-parameter
 
   .step(data-title='The outbound endpoint', data-file='clicktocall/app.py',
-    data-highlight='38-39')
+    data-highlight='37-41')
     :markdown
       ## The Outbound Endpoint
 
@@ -120,14 +120,12 @@
       ## Generating TwiML
 
       TwiML is a set of [simple verbs][verbs] written in XML that Twilio reads as instructions.
-      In this case our instructions inform Twilio to simply SAY something to the user. If we wanted
-      to connect the user to a real support agent, we would have to add a
-      [Dial verb](//www.twilio.com/docs/api/twiml/dial) that specifies the support agent number
-      so the customer can talk to him/her.
+      In this case our instructions inform Twilio to simply SAY something to the user and then 
+      [Dial verb](//www.twilio.com/docs/api/twiml/dial) the sales team.
 
       In order to make writing TwiML easy, many of the helper libraries have methods that generate
       TwiML for you. In this case we use `twilio` python library to create a TwiML response that will instruct
-      Twilio to say something.
+      Twilio to say something and then dial a specified number.
 
       [verbs]: //www.twilio.com/docs/api/twiml#verbs
 

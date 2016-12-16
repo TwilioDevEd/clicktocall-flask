@@ -1,0 +1,31 @@
+{
+    "name": "Twilio Click To Call: Flask",
+    "description": "An example of implementing click to call functionality in a Python Flask application",
+    "keywords": [
+        "twilio",
+        "flask",
+        "python",
+        "web",
+        "SMS",
+        "voice"
+    ],
+    "website": "http://www.twilio.com",
+    "repository": "https://github.com/TwilioDevEd/clicktocall-flask",
+    "logo": "https://s3-us-west-2.amazonaws.com/deved/twilio-logo.png",
+    "success_url": "/landing.html",
+    "env": {
+        "TWILIO_ACCOUNT_SID": {
+            "description": "Your Twilio account's unique identifier, found here: https://www.twilio.com/user/account",
+            "value": "ACxxxxxxxxxxxxxx"
+        },
+        "TWILIO_AUTH_TOKEN": {
+            "description": "Your Twilio account's secret key, found here: https://www.twilio.com/user/account",
+            "value": "yyyyyyyyyyyyyyyyyy"
+        },
+        "TWILIO_PHONE": {
+            "description": "A Twilio number assigned to your account in E.164 format, found here: https://www.twilio.com/user/account/phone-numbers/incoming",
+            "value": "+15556667777"
+        }
+    },
+    "success_url": "/landing.html"
+}
