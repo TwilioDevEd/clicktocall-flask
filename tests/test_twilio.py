@@ -1,4 +1,7 @@
 import unittest
+import json
+
+from mock import Mock
 from mock import patch
 
 from app import app
@@ -9,8 +12,10 @@ app.config['TWILIO_PHONE'] = '+15558675309'
 
 BASE_URI = "https://api.twilio.com/2010-04-01/Accounts/" \
            "{0}".format(app.config['TWILIO_ACCOUNT_SID'])
+
 AUTH = (app.config['TWILIO_ACCOUNT_SID'], app.config['TWILIO_AUTH_TOKEN'])
 
+OUTBOUND_URL = "/outbound/+15556667777"
 
 class TwiMLTest(unittest.TestCase):
     def setUp(self):
@@ -64,22 +69,23 @@ class ClickToCallTests(TwiMLTest):
         self.assertEquals("200 OK", response.status)
 
     def test_outbound(self):
-        response = self.call(url='/outbound')
+
+        response = self.call(url=OUTBOUND_URL)
         self.assertTwiML(response)
 
     @patch("twilio.rest.resources.base.make_request")
     def test_call(self, mock):
         expected_params = {'From': app.config['TWILIO_PHONE'],
                            'To': '+15556667777',
-                           'Url': 'http://localhost/outbound'}
-
+                           'Url': "http://localhost/outbound/+15556667776"}
         api_response = Mock()
         api_response.content = json.dumps(expected_params)
         api_response.status_code = 201
         mock.return_value = api_response
 
         response = self.app.post('/call',
-                                 data={'phoneNumber': '+15556667777'})
+                                 data={'phoneNumber': '+15556667777',
+                                       'salesNumber': '+15556667776'})
 
         self.assertEquals("200 OK", response.status)
 
@@ -99,7 +105,8 @@ class ClickToCallTests(TwiMLTest):
         mock.side_effect = raiseException
 
         response = self.app.post('/call',
-                                 data={'phoneNumber': '+15556667777'})
+                                 data={'phoneNumber': '+15556667777',
+                                       'salesNumber': '+15556667776'})
 
         # Assert
         self.assertEquals("200 OK", response.status)
@@ -118,7 +125,8 @@ class NoCredentialsTests(unittest.TestCase):
 
     def test_call_without_twilio_credentials(self):
         response = self.app.post('/call',
-                                 data={'phoneNumber': '+15556667777'})
+                                 data={'phoneNumber': '+15556667777',
+                                       'salesNumber': '+15556667776'})
 
         self.assertEquals("200 OK", response.status)
         self.assertTrue(b"Missing" in response.data, "Could not "
