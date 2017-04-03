@@ -11,138 +11,56 @@ This is an application example implementing Click to Call using Twilio.
 
 [Read the full tutorial here](https://www.twilio.com/docs/tutorials/walkthrough/click-to-call/python/flask)!
 
-## Installation
+## Local development
 
-Step-by-step on how to deploy, configure and develop on this example app.
+This project is built using the [Flask](http://flask.pocoo.org/) web framework. It runs on Python 2.7+ and Python 3.4+.
 
-### Fastest Deploy
+To run the app locally, first clone this repository and `cd` into its directory. Then:
 
-Use Heroku to deploy this app immediately:
+1. Create a new virtual environment:
+    - If using vanilla [virtualenv](https://virtualenv.pypa.io/en/latest/):
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/TwilioDevEd/clicktocall-flask)
+        ```
+        virtualenv venv
+        source venv/bin/activate
+        ```
 
-### Getting Started
+    - If using [virtualenvwrapper](https://virtualenvwrapper.readthedocs.org/en/latest/):
 
-1. Grab the latest source.
+        ```
+        mkvirtualenv clicktocall-flask
+        ```
 
-   ```bash
-   $ git clone git://github.com/TwilioDevEd/clicktocall-flask.git
-   ```
+1. Install the requirements:
 
-1. Navigate to folder and create new Heroku Cedar app.
+    ```
+    pip install -r requirements.txt
+    ```
 
-   ```bash
-   $ heroku create
-   ```
+1. Copy the `.env.example` file to `.env`, and edit it including your credentials
+   for the Twilio API (found at https://www.twilio.com/user/account/settings). You
+   will also need a [Twilio Number](https://www.twilio.com/user/account/phone-numbers/incoming).
+1. Run `source .env` to apply the environment variables (or even better, use [autoenv](https://github.com/kennethreitz/autoenv))
 
-1. Deploy to Heroku.
-
-   ```bash
-   $ git push heroku master
-   ```
-
-1. Scale your dynos.
-
-   ```bash
-   $ heroku scale web=1
-   ```
-
-1. Visit the home page of your new Heroku app to see your newly configured app!
+1. Expose your application to the wider internet using ngrok. You can click
+   [here](#expose-the-application-to-the-wider-internet) for more details. This step
+   is important because the application won't work as expected if you run it through
+   localhost.
 
    ```bash
-   $ heroku open
+   $ ngrok http 5000
    ```
 
-### Configuration
+1. Start the development server:
 
-Want to use the built-in Twilio Client template?  Configure your app with
-three easy options.
+    ```
+    make run
+    ```
 
-#### Automatic Configuration
+Once Ngrok is running, open up your browser and go to your Ngrok URL. It will
+look like this: `http://9a159ccf.ngrok.io`
 
-This app ships with an auto-configure script that will create a new TwiML
-app. Purchase a new phone number and set your Heroku app's environment
-variables to be used with your new settings.  Here's a quick step-by-step:
-
-1. Make sure you have all dependencies installed.
-
-   ```bash
-   $ make init
-   ```
-
-1. Run configure script and follow instructions.
-
-   ```bash
-   $ python configure.py --account_sid ACxxxxxx --auth_token yyyyyyy
-   ```
-
-1. For local development, copy/paste the environment variable commands the configurator provides to your shell.
-
-   ```bash
-   export TWILIO_ACCOUNT_SID=ACxxxxxx
-   export TWILIO_AUTH_TOKEN=yyyyyyyyy
-   export TWILIO_APP_SID=APzzzzzzzzzz
-   export TWILIO_CALLER_ID=+15556667777
-   ```
-
-Automagic configuration comes with a number of features.  
-`python configure.py --help` to see them all.
-
-#### `local_settings.py`
-
-`local_settings.py` is a file available on the app route for you to configure
-your twilio account credentials manually.  Be sure not to expose your Twilio
-account to a public repo though.
-
-```python
-ACCOUNT_SID = "ACxxxxxxxxxxxxx"
-AUTH_TOKEN = "yyyyyyyyyyyyyyyy"
-TWILIO_APP_SID = "APzzzzzzzzz"
-TWILIO_CALLER_ID = "+17778889999"
-```
-
-#### Setting Your Own Environment Variables
-
-The application configurator will automatically use your environment variables. You
-can set your own TwiML app and phone number if you prefer to.  The environment
-variables are required to configure and run the Twilio and Heroku apps.
-
-1. Set environment variables locally.
-
-   ```bash
-   export TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxx
-   export TWILIO_AUTH_TOKEN=yyyyyyyyyyyyyyyyy
-   export TWILIO_APP_SID=APzzzzzzzzzzzzzzzzzz
-   export TWILIO_CALLER_ID=+15556667777
-   ```
-
-1. Run configurator.
-
-   ```bash
-   $ python configure.py
-   ```
-
-### Development
-
-Getting your local environment setup to work with this app is easy.
-After you configure your app with the steps above use this guide to
-get it going locally.
-
-1. Install the dependencies.
-
-   ```bash
-   $ make init
-   ```
-
-1. Launch local development webserver.
-
-   ```bash
-   $ foreman start
-   ```
-
-1. Open browser to [http://localhost:5000](http://localhost:5000).
-
-1. Tweak away on `clicktocall/app.py`.
+That's it!
 
 ## Testing
 
@@ -150,29 +68,6 @@ This app comes with a full testing suite ready for nose.
 
 ```bash
 $ make test
-```
-
-It also ships with an easy-to-use base class for testing your
-[TwiML](http://www.twilio.com/docs/api/twiml).  For example, testing a basic SMS
-response is only two lines of code.
-
-```python
-import test_twilio
-
-class ExampleTest(test_twilio.TwiMLTest):
-    response = self.sms("Test")
-    self.assertTwiML(response)
-```
-
-You can also test your [Gather
-verbs](http://www.twilio.com/docs/api/twiml/gather) for voice apps very easily.
-
-```python
-import test_twilio
-
-class ExampleTest(test_twilio.TwiMLTest):
-    response = self.call(digits="1")
-    self.assertTwiML(response)
 ```
 
 ## Meta
