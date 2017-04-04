@@ -4,7 +4,7 @@ from flask import render_template
 from flask import request
 from flask import url_for
 
-from twilio import twiml
+from twilio.twiml.voice_response import VoiceResponse
 from twilio.rest import Client
 
 # Declare and configure application
@@ -46,7 +46,7 @@ def call():
 
 @app.route('/outbound', methods=['POST'])
 def outbound():
-    response = twiml.Response()
+    response = VoiceResponse()
 
     response.say("Thank you for contacting our sales department. If this "
                  "click to call application was in production, we would "
