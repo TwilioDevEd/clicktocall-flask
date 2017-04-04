@@ -1,3 +1,3 @@
 Flask==0.10.1
 tox==1.7.2
-twilio==6.0.0rc12
+twilio==6.0.0
