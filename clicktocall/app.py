@@ -55,8 +55,7 @@ def outbound():
     '''
     # Uncomment this code and replace the number with the number you want
     # your customers to call.
-    with response.dial() as dial:
-        dial.number("+16518675309")
+    response.number("+16518675309")
     '''
     return str(response)
 
