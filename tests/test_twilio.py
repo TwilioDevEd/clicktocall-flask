@@ -68,7 +68,7 @@ class ClickToCallTests(TwiMLTest):
         self.assertTwiML(response)
 
     def test_call(self):
-        with patch('twilio.rest.api.v2010.account.call.CallList.create') as mock:
+        with patch('twilio.rest.api.v2010.account.call.CallList.create') as mock:  # noqa: E501
             response = self.app.post('/call',
                                      data={'phoneNumber': '+15556667777'})
 
