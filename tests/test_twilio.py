@@ -61,7 +61,11 @@ class TwiMLTest(unittest.TestCase):
 class ClickToCallTests(TwiMLTest):
     def test_index(self):
         response = self.app.get('/')
-        self.assertEquals("200 OK", response.status)
+        self.assertEqual("200 OK", response.status)
+
+    def test_landing(self):
+        response = self.app.get('/landing.html')
+        self.assertEqual("200 OK", response.status)
 
     def test_outbound(self):
         response = self.call(url='/outbound')
@@ -73,13 +77,25 @@ class ClickToCallTests(TwiMLTest):
                                      data={'phoneNumber': '+15556667777'})
 
         # Assert
-        self.assertEquals("200 OK", response.status)
+        self.assertEqual("200 OK", response.status)
         self.assertTrue(mock.called)
         mock.assert_called_with(
             to='+15556667777',
             from_=app.config['TWILIO_CALLER_ID'],
             url='http://localhost/outbound'
         )
+
+    def test_failed_call(self):
+        with patch('twilio.rest.api.v2010.account.call.CallList.create') as mock:  # noqa: E501
+            mock.side_effect = Exception('test error')
+            response = self.app.post('/call',
+                                     data={'phoneNumber': 'BAD_NUMBER'})
+
+        # Assert
+        self.assertEqual("200 OK", response.status)
+        self.assertTrue(b"error" in response.data, "Could not "
+                        "find error for Twilio client response: "
+                        "{0}".format(response.data))
 
 
 class NoCredentialsTests(unittest.TestCase):
@@ -91,7 +107,7 @@ class NoCredentialsTests(unittest.TestCase):
         response = self.app.post('/call',
                                  data={'phoneNumber': '+15556667777'})
 
-        self.assertEquals("200 OK", response.status)
+        self.assertEqual("200 OK", response.status)
         self.assertTrue(b"Missing" in response.data, "Could not "
                         "find error for missing Twilio credentials: "
                         "{0}".format(response.data))

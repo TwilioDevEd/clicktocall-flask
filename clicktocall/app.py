@@ -33,7 +33,7 @@ def call():
         return jsonify({'error': msg})
 
     try:
-        twilio_client.calls.create(from_=app.config['TWILIO_CALLER_ID'],
+        res = twilio_client.calls.create(from_=app.config['TWILIO_CALLER_ID'],
                                    to=phone_number,
                                    url=url_for('.outbound',
                                                _external=True))
@@ -60,7 +60,7 @@ def outbound():
     return str(response)
 
 
-# Route for Landing Page after Heroku deploy.
+# Route for Landing Page after deploy.
 @app.route('/landing.html')
 def landing():
     return render_template('landing.html',

@@ -1,6 +1,5 @@
 [run]
-source = hackpack 
+source = clicktocall 
 [report]
 omit =
     */python?.?/*
-    */site-packages/nose/*

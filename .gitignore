@@ -16,3 +16,5 @@ venv
 flask_clicktocall.egg-info
 
 .env
+.vscode
+__pycache__
