@@ -92,7 +92,7 @@ class ClickToCallTests(TwiMLTest):
                                      data={'phoneNumber': 'BAD_NUMBER'})
 
         # Assert
-        self.assertEqual("200 OK", response.status)
+        self.assertEqual("400 BAD REQUEST", response.status)
         self.assertTrue(b"error" in response.data, "Could not "
                         "find error for Twilio client response: "
                         "{0}".format(response.data))
@@ -107,7 +107,7 @@ class NoCredentialsTests(unittest.TestCase):
         response = self.app.post('/call',
                                  data={'phoneNumber': '+15556667777'})
 
-        self.assertEqual("200 OK", response.status)
+        self.assertEqual("400 BAD REQUEST", response.status)
         self.assertTrue(b"Missing" in response.data, "Could not "
                         "find error for missing Twilio credentials: "
                         "{0}".format(response.data))

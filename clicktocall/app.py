@@ -25,12 +25,16 @@ def call():
     # Get phone number we need to call
     phone_number = request.form.get('phoneNumber', None)
 
+    if not phone_number:
+        msg = 'Missing phone number value'
+        return jsonify({'error': msg}), 400
+
     try:
         twilio_client = Client(app.config['TWILIO_ACCOUNT_SID'],
                                app.config['TWILIO_AUTH_TOKEN'])
     except Exception as e:
         msg = 'Missing configuration variable: {0}'.format(e)
-        return jsonify({'error': msg})
+        return jsonify({'error': msg}), 400
 
     try:
         res = twilio_client.calls.create(from_=app.config['TWILIO_CALLER_ID'],
@@ -39,7 +43,7 @@ def call():
                                                _external=True))
     except Exception as e:
         app.logger.error(e)
-        return jsonify({'error': str(e)})
+        return jsonify({'error': str(e)}), 400
 
     return jsonify({'message': 'Call incoming!'})
 
