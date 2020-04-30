@@ -33,17 +33,17 @@ To run the app locally, first clone this repository and `cd` into its directory.
         mkvirtualenv clicktocall-flask
         ```
 
-1. Install the requirements:
+2. Install the requirements:
 
     ```
     pip install -r requirements.txt
     ```
 
-1. Copy the `.env.example` file to `.env`, and edit it including your credentials
+3. Copy the `.env.example` file to `.env`, and edit it including your credentials
    for the Twilio API (found at https://www.twilio.com/user/account/settings). You
    will also need a [Twilio Number](https://www.twilio.com/user/account/phone-numbers/incoming).
 
-1. Expose your application to the wider internet using ngrok. You can click
+4. Expose your application to the wider internet using ngrok. You can click
    [here](#expose-the-application-to-the-wider-internet) for more details. This step
    is important because the application won't work as expected if you run it through
    localhost.
@@ -52,7 +52,7 @@ To run the app locally, first clone this repository and `cd` into its directory.
    $ ngrok http 5000
    ```
 
-1. Start the development server:
+5. Start the development server:
 
     ```
     make run

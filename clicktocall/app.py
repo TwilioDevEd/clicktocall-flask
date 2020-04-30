@@ -43,7 +43,8 @@ def call():
                                                _external=True))
     except Exception as e:
         app.logger.error(e)
-        return jsonify({'error': str(e)}), 400
+        message = e.msg if hasattr(e, 'msg') else str(e)
+        return jsonify({'error': message}), 400
 
     return jsonify({'message': 'Call incoming!'})
 
