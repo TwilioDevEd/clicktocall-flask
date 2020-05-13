@@ -6,7 +6,7 @@
 
 This is an application example implementing Click to Call using Twilio.
 
-[![Build Status](https://travis-ci.org/TwilioDevEd/clicktocall-flask.svg?branch=master)](https://travis-ci.org/TwilioDevEd/clicktocall-flask)
+![](https://github.com/TwilioDevEd/clicktocall-flask/workflows/Flask/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/TwilioDevEd/clicktocall-flask/badge.svg)](https://coveralls.io/r/TwilioDevEd/clicktocall-flask)
 
 > We are currently in the process of updating this sample template. If you are encountering any issues with the sample, please open an issue at [github.com/twilio-labs/code-exchange/issues](https://github.com/twilio-labs/code-exchange/issues) and we'll try to help you.
@@ -15,7 +15,7 @@ This is an application example implementing Click to Call using Twilio.
 
 ## Local development
 
-This project is built using the [Flask](http://flask.pocoo.org/) web framework. It runs on Python 2.7+ and Python 3.4+.
+This project is built using the [Flask](https://flask.palletsprojects.com/) web framework. It runs on Python 2.7+ and Python 3.4+.
 
 To run the app locally, first clone this repository and `cd` into its directory. Then:
 
@@ -33,18 +33,17 @@ To run the app locally, first clone this repository and `cd` into its directory.
         mkvirtualenv clicktocall-flask
         ```
 
-1. Install the requirements:
+2. Install the requirements:
 
     ```
     pip install -r requirements.txt
     ```
 
-1. Copy the `.env.example` file to `.env`, and edit it including your credentials
+3. Copy the `.env.example` file to `.env`, and edit it including your credentials
    for the Twilio API (found at https://www.twilio.com/user/account/settings). You
    will also need a [Twilio Number](https://www.twilio.com/user/account/phone-numbers/incoming).
-1. Run `source .env` to apply the environment variables (or even better, use [autoenv](https://github.com/kennethreitz/autoenv))
 
-1. Expose your application to the wider internet using ngrok. You can click
+4. Expose your application to the wider internet using ngrok. You can click
    [here](#expose-the-application-to-the-wider-internet) for more details. This step
    is important because the application won't work as expected if you run it through
    localhost.
@@ -53,7 +52,7 @@ To run the app locally, first clone this repository and `cd` into its directory.
    $ ngrok http 5000
    ```
 
-1. Start the development server:
+5. Start the development server:
 
     ```
     make run
@@ -75,5 +74,6 @@ $ make test
 ## Meta
 
 * No warranty expressed or implied.  Software is as is. Diggity.
+* The CodeExchange repository can be found [here](https://github.com/twilio-labs/code-exchange/).
 * [MIT License](http://www.opensource.org/licenses/mit-license.html)
 * Lovingly crafted by Twilio Developer Education.

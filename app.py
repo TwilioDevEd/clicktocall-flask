@@ -2,6 +2,8 @@ import os
 
 from clicktocall.app import app
 
+from dotenv import load_dotenv
+load_dotenv()
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
