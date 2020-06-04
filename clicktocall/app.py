@@ -44,7 +44,7 @@ def call():
     return jsonify({'message': 'Call incoming!'})
 
 
-@app.route('/outbound', methods=['POST'])
+@app.route('/outbound', methods=['GET','POST'])
 def outbound():
     response = VoiceResponse()
 
@@ -52,11 +52,9 @@ def outbound():
                  "click to call application was in production, we would "
                  "dial out to your sales team with the Dial verb.",
                  voice='alice')
-    '''
     # Uncomment this code and replace the number with the number you want
     # your customers to call.
-    response.number("+16518675309")
-    '''
+    # response.number("+441458553201")
     return str(response)
 
 
