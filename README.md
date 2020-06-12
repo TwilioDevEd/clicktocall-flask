@@ -4,76 +4,131 @@
 
 # Click to Call with Flask
 
-This is an application example implementing Click to Call using Twilio.
-
-![](https://github.com/TwilioDevEd/clicktocall-flask/workflows/Flask/badge.svg)
+[![Build Status](https://travis-ci.org/TwilioDevEd/clicktocall-flask.svg?branch=master)](https://travis-ci.org/TwilioDevEd/clicktocall-flask)
 [![Coverage Status](https://coveralls.io/repos/TwilioDevEd/clicktocall-flask/badge.svg)](https://coveralls.io/r/TwilioDevEd/clicktocall-flask)
 
 > We are currently in the process of updating this sample template. If you are encountering any issues with the sample, please open an issue at [github.com/twilio-labs/code-exchange/issues](https://github.com/twilio-labs/code-exchange/issues) and we'll try to help you.
 
+## About
+
+This is an application example implementing Click to Call using Twilio and [Flask](http://flask.pocoo.org/) web framework.
+
 [Read the full tutorial here](https://www.twilio.com/docs/tutorials/walkthrough/click-to-call/python/flask)!
 
-## Local development
+Implementations in other languages:
 
-This project is built using the [Flask](https://flask.palletsprojects.com/) web framework. It runs on Python 2.7+ and Python 3.4+.
+| .NET | Java | Node | Ruby | PHP |
+| :--- | :--- | :----- | :-- | :--- |
+| [Done](https://github.com/TwilioDevEd/clicktocall-csharp)  | [Done](https://github.com/TwilioDevEd/clicktocall-spring)  | [Done](https://github.com/TwilioDevEd/clicktocall-node)  | [Done](https://github.com/TwilioDevEd/clicktocall-rails) | [Done](https://github.com/TwilioDevEd/clicktocall-php)  |
 
-To run the app locally, first clone this repository and `cd` into its directory. Then:
 
-1. Create a new virtual environment:
-    - If using vanilla [virtualenv](https://virtualenv.pypa.io/en/latest/):
+## Set up
 
-        ```
-        virtualenv venv
-        source venv/bin/activate
-        ```
+### Requirements
 
-    - If using [virtualenvwrapper](https://virtualenvwrapper.readthedocs.org/en/latest/):
+- [Python](https://www.python.org/) **3.6**, **3.7** or **3.8** version.
 
-        ```
-        mkvirtualenv clicktocall-flask
-        ```
+In some environments when both version 2
+and 3 are installed, you may substitute the Python executables below with
+`python3` and `pip3` unless you use a version manager such as
+[pyenv](https://github.com/pyenv/pyenv).
 
-2. Install the requirements:
+### Twilio Account Settings
 
+This application should give you a ready-made starting point for writing your own application.
+Before we begin, we need to collect all the config values we need to run the application:
+
+| Config Value | Description                                                                                                                                                  |
+| :---------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| TWILIO_ACCOUNT_SID  | Your primary Twilio account identifier - find this [in the Console](https://www.twilio.com/console/project/settings).|
+| TWILIO_AUTH_TOKEN   | Used to authenticate - just like the above, you'll find this [here](https://www.twilio.com/console/project/settings).|
+| TWILIO_CALLER_ID | A Twilio phone number in [E.164 format](https://en.wikipedia.org/wiki/E.164) - you can [get one here](https://www.twilio.com/console/phone-numbers/incoming) |
+
+### Local development
+
+1. First clone this repository and `cd` into it.
+
+   ```bash
+   git clone https://github.com/TwilioDevEd/clicktocall-flask.git
+   cd clicktocall-flask
+   ```
+
+2. Create the virtual environment, load it and install the dependencies.
+
+    ```bash
+    make install
     ```
-    pip install -r requirements.txt
-    ```
 
-3. Copy the `.env.example` file to `.env`, and edit it including your credentials
-   for the Twilio API (found at https://www.twilio.com/user/account/settings). You
-   will also need a [Twilio Number](https://www.twilio.com/user/account/phone-numbers/incoming).
+3. Copy the sample configuration file and edit it to match your configuration.
 
-4. Expose your application to the wider internet using ngrok. You can click
+   ```bash
+   cp .env.example .env
+   ```
+
+   See [Twilio Account Settings](#twilio-account-settings) to locate the necessary environment variables.
+
+4. Start the development server, it will run on port 5000. Before running the following command, make sure the virtual environment is activated.
+
+   ```bash
+   make serve
+   ```
+
+5. Expose your application to the wider internet using ngrok. You can click
    [here](#expose-the-application-to-the-wider-internet) for more details. This step
    is important because the application won't work as expected if you run it through
    localhost.
 
    ```bash
-   $ ngrok http 5000
+   ngrok http 5000
    ```
 
-5. Start the development server:
-
-    ```
-    make run
-    ```
-
-Once Ngrok is running, open up your browser and go to your Ngrok URL. It will
+6. Once Ngrok is running, open up your browser and go to your Ngrok URL. It will
 look like this: `http://9a159ccf.ngrok.io`
 
 That's it!
 
-## Testing
+### Docker
 
-This app comes with a full testing suite ready for nose.
+If you have [Docker](https://www.docker.com/) already installed on your machine, you can use our `docker-compose.yml` to setup your project.
+
+1. Make sure you have the project cloned.
+2. Setup the `.env` file as outlined in the [Local Development](#local-development) steps.
+3. Run `docker-compose up`.
+4. Follow the steps in [Local Development](#local-development) on how to expose your port to Twilio using a tool like [ngrok](https://ngrok.com/) and configure the remaining parts of your application.
+
+
+### Tests
+
+To execute tests, run the following command in the project directory. Before running the following command, make sure the virtual environment is activated.
 
 ```bash
-$ make test
+make test
 ```
 
-## Meta
+### Cloud deployment
 
-* No warranty expressed or implied.  Software is as is. Diggity.
-* The CodeExchange repository can be found [here](https://github.com/twilio-labs/code-exchange/).
-* [MIT License](http://www.opensource.org/licenses/mit-license.html)
-* Lovingly crafted by Twilio Developer Education.
+Additionally to trying out this application locally, you can deploy it to a variety of host services. Here is a small selection of them.
+
+Please be aware that some of these might charge you for the usage or might make the source code for this application visible to the public. When in doubt research the respective hosting service first.
+
+| Service                           |                                                                                                                                                                                                                           |
+| :-------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [Heroku](https://www.heroku.com/) | [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)                                                                                                                                       |
+
+## Resources
+
+- The CodeExchange repository can be found [here](https://github.com/twilio-labs/code-exchange/).
+
+## Contributing
+
+This template is open source and welcomes contributions. All contributions are subject to our [Code of Conduct](https://github.com/twilio-labs/.github/blob/master/CODE_OF_CONDUCT.md).
+
+## License
+
+[MIT](http://www.opensource.org/licenses/mit-license.html)
+
+## Disclaimer
+
+No warranty expressed or implied. Software is as is.
+
+[twilio]: https://www.twilio.com
