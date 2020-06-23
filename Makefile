@@ -1,4 +1,4 @@
-.PHONY: venv install
+.PHONY: venv install serve test
 UNAME := $(shell uname)
 
 venv:
