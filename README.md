@@ -74,7 +74,7 @@ Before we begin, we need to collect all the config values we need to run the app
    ```
 
 5. Expose your application to the wider internet using ngrok. You can click
-   [here](#expose-the-application-to-the-wider-internet) for more details. This step
+   [here](https://www.twilio.com/blog/2015/09/6-awesome-reasons-to-use-ngrok-when-testing-webhooks.html) for more details. This step
    is important because the application won't work as expected if you run it through
    localhost.
 
