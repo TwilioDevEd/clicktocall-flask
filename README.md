@@ -13,7 +13,7 @@
 
 This is an application example implementing Click to Call using Twilio and [Flask](http://flask.pocoo.org/) web framework.
 
-[Read the tutorial here](https://www.twilio.com/docs/tutorials/click-to-call)!
+[Read the tutorial here](https://www.twilio.com/docs/voice/tutorials/click-to-call)!
 
 Implementations in other languages:
 
